@@ -23,4 +23,10 @@ public class CandidateController {
       return CandidateService.addCandidate(candidateDto);
     }
 
+    @PutMapping("/update")
+    public CandidateDto updateCandidate(@RequestBody CandidateDto candidateDto) {
+
+      return CandidateService.updateCandidate(candidateDto);
+    }
+
 }

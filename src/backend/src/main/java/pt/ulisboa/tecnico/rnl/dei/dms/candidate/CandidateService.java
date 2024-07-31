@@ -24,5 +24,14 @@ public class CandidateService {
         candidateRepository.save(candidate);
         return new CandidateDto(candidate);
     }
+
+    public CandidateDto updateCandidate(CandidateDto candidateDto) {
+        Candidate candidate = candidateRepository.findById(candidateDto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Candidate not found"));
+        candidate.setName(candidateDto.getName());
+        candidate.setEmail(candidateDto.getEmail());
+        candidateRepository.save(candidate);
+        return new CandidateDto(candidate);
+    }
     
 }
