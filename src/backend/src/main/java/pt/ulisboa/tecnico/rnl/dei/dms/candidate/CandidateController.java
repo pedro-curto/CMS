@@ -13,7 +13,7 @@ public class CandidateController {
     @Autowired
     private CandidateService CandidateService;
 
-    @GetMapping("/get")
+    @GetMapping("/getAll")
     public List<CandidateDto> getCandidates() {
       return CandidateService.getCandidates();
     }

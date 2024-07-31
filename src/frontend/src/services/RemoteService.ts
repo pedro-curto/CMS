@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 import MaterialDto from '@/models/materials/MaterialDto'
+import CandidateDto from '@/models/candidate/CandidateDto';
 
 const httpClient = axios.create()
 httpClient.defaults.timeout = 10000
@@ -32,5 +33,13 @@ export default class RemoteService {
 
   static async deleteMaterial(material: MaterialDto): Promise<void> {
     return httpClient.delete(`/materials/delete/${material.id}`)
+  }
+
+  static async getCandidates() {
+    return httpClient.get('/candidates/getAll').then((response) => {
+      return response.data.map((candidate: any) => {
+        return new CandidateDto(candidate)
+      })
+    })
   }
 }

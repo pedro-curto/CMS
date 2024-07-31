@@ -9,6 +9,6 @@ import NavBar from '@/components/NavBar.vue'
 
 const navbarItems = [
   { name: 'Bolsas', path: '/admin', icon: 'mdi-briefcase' },
-  { name: 'Candidatos', path: '/materials', icon: 'mdi-account-group' },
+  { name: 'Candidatos', path: '/candidates', icon: 'mdi-account-group' },
 ]
 </script>
