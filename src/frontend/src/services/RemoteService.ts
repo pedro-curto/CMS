@@ -42,4 +42,10 @@ export default class RemoteService {
       })
     })
   }
+
+    static async addCandidate(candidate: CandidateDto): Promise<CandidateDto> {
+    return httpClient.post('/candidates/add', candidate).then((response) => {
+      return new CandidateDto(response.data)
+    })
+  }
 }

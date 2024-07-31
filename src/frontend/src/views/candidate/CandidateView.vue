@@ -4,7 +4,7 @@
       <h2 class="text-left ml-1">Listagem de Candidatos</h2>
     </v-col>
     <v-col cols="auto">
-      <CreateMaterialDialog @material-created="getMaterials" />
+      <CreateCandidateDialog @candidate-created="getCandidates" />
     </v-col>
   </v-row>
 
@@ -24,22 +24,11 @@
     :custom-filter="fuzzySearch"
     class="text-left"
   >
-    <template v-slot:[`item.available`]="{ item }">
-      <v-icon v-if="item.available" color="success">mdi-check</v-icon>
-      <v-icon v-else color="error">mdi-close</v-icon>
-    </template>
-    <template v-slot:[`item.type`]="{ item }">
-      <v-chip>{{ item.type }}</v-chip>
-    </template>
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-icon @click="editMaterial(item)" class="mr-2">mdi-pencil</v-icon>
-      <v-icon @click="deleteMaterial(item)">mdi-delete</v-icon>
-    </template>
   </v-data-table>
 </template>
 
 <script setup lang="ts">
-import CreateMaterialDialog from '@/views/materials/CreateMaterialDialog.vue'
+import CreateCandidateDialog from '@/views/candidate/CreateCandidateDialog.vue'
 import { ref } from 'vue'
 import RemoteService from '@/services/RemoteService'
 
@@ -55,12 +44,6 @@ const headers = [
 
 const candidates: CandidateDto[] = reactive([])
 
-const materialTypes = {
-  KEY: 'Chave',
-  LOCKER: 'Cacifo',
-  GENERIC: 'Genérico'
-}
-
 getCandidates()
 async function getCandidates() {
   candidates.splice(0, candidates.length)
@@ -68,18 +51,6 @@ async function getCandidates() {
     data.forEach((candidate: CandidateDto) => {
       candidates.push(candidate)
     })
-  })
-}
-
-function editMaterial(material: MaterialDto) {
-  RemoteService.updateMaterial(material).then(() => {
-    getMaterials()
-  })
-}
-
-function deleteMaterial(material: MaterialDto) {
-  RemoteService.deleteMaterial(material).then(() => {
-    getMaterials()
   })
 }
 

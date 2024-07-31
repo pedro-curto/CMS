@@ -5,7 +5,7 @@
         <v-btn
           class="text-none font-weight-regular"
           prepend-icon="mdi-plus"
-          text="Adicionar Material"
+          text="Adicionar Candidato"
           v-bind="activatorProps"
           color="primary"
         ></v-btn>
