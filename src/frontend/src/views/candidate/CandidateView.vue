@@ -24,6 +24,9 @@
     :custom-filter="fuzzySearch"
     class="text-left"
   >
+    <template v-slot:item.actions="{ item }">
+      <UpdateCandidateDialog :candidate="item" @candidate-updated="getCandidates" />
+    </template>
   </v-data-table>
 </template>
 
@@ -31,15 +34,16 @@
 import CreateCandidateDialog from '@/views/candidate/CreateCandidateDialog.vue'
 import { ref } from 'vue'
 import RemoteService from '@/services/RemoteService'
-
 import { reactive } from 'vue'
-import type CandidateDto from "@/models/candidate/CandidateDto";
+import type CandidateDto from "@/models/candidate/CandidateDto"
+import UpdateCandidateDialog from "@/views/candidate/UpdateCandidateDialog.vue"
 
 const search = ref('')
 const headers = [
   { title: 'IstID', value: 'id', key: 'id' },
-  { title: 'Nome', value: 'name', key: 'name ' },
+  { title: 'Nome', value: 'name', key: 'name' },
   { title: 'Email', value: 'email', key: 'email' },
+  { title: 'Actions', value: 'actions', key: 'actions' }
 ]
 
 const candidates: CandidateDto[] = reactive([])

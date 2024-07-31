@@ -48,4 +48,11 @@ export default class RemoteService {
       return new CandidateDto(response.data)
     })
   }
+
+  static async updateCandidate(candidate: CandidateDto): Promise<CandidateDto> {
+    console.log(candidate)
+    return httpClient.put('/candidates/update', candidate).then((response) => {
+      return new CandidateDto(response.data)
+    })
+  }
 }
