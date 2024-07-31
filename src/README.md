@@ -48,7 +48,7 @@ docker compose down
 
 ### Backend
 
-Create a copy of the `application-local.properties` file.
+Create a copy of the `application.properties` file.
 
 ```bash
 cp ./backend/src/main/resources/application-local.properties.example ./backend/src/main/resources/application-local.properties
@@ -91,5 +91,5 @@ Access http://localhost:8081
 In order to access the database, you can use the following command:
 
 ```bash
-mysql -u root -p<password> -h 127.0.0.1 -P 7654 dmsdb
+psql -h localhost -p <PORT> -U <USER> <DB_NAME>
 ```
