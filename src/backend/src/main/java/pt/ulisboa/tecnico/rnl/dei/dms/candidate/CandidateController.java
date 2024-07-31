@@ -18,4 +18,9 @@ public class CandidateController {
       return CandidateService.getCandidates();
     }
 
+    @PostMapping("/add")
+    public CandidateDto addCandidate(@RequestBody CandidateDto candidateDto) {
+      return CandidateService.addCandidate(candidateDto);
+    }
+
 }
