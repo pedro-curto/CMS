@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, reactive } from 'vue'
+import {ref, reactive, watch } from 'vue'
 import RemoteService from '@/services/RemoteService'
 import type FellowshipDto from '@/models/fellowship/FellowshipDto'
 import VueDatePicker from '@vuepic/vue-datepicker'
@@ -81,8 +81,23 @@ const dialog = ref(false)
 const emit = defineEmits(['fellowship-created'])
 const newFellowship = reactive<FellowshipDto>({
   name: '',
-  email: ''
+  startDate: '',
+  endDate: '',
+  monthlyValue: ''
 })
+
+watch(dialog, (newVal) => {
+  if (!newVal) {
+    resetFellowship()
+  }
+})
+
+const resetFellowship = () => {
+  newFellowship.fellowshipId = ''
+  newFellowship.startDate = ''
+  newFellowship.endDate = ''
+  newFellowship.monthlyValue = ''
+}
 
 const saveFellowship = async () => {
   await RemoteService.addFellowship(newFellowship)
