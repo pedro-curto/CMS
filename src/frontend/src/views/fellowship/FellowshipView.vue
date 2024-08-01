@@ -4,7 +4,7 @@
       <h2 class="text-left ml-1">Fellowship Listing</h2>
     </v-col>
     <v-col cols="auto">
-      <CreateCandidateDialog @fellowship-created="fetchFellowships" />
+      <CreateFellowshipDialog @fellowship-created="fetchFellowships" />
     </v-col>
   </v-row>
 
@@ -31,17 +31,9 @@
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import RemoteService from '@/services/RemoteService'
 import type FellowshipDto from '@/models/fellowship/FellowshipDto'
-import CreateCandidateDialog from '@/views/candidate/CreateCandidateDialog.vue'
+import CreateFellowshipDialog from '@/views/fellowship/CreateFellowshipDialog.vue'
 
 const search = ref('')
-/*
-    id?: string
-    fellowshipId?: string
-    startDate?: string
-    endDate?: string
-    monthlyValue?: number
-    candidates?: Candidate[] = []
- */
 const headers = [
   { title: 'Fellowship ID', value: 'fellowshipId', key: 'fellowshipId' },
   { title: 'Start Date', value: 'startDate', key: 'startDate' },
