@@ -2,6 +2,7 @@ import axios from 'axios'
 
 import MaterialDto from '@/models/materials/MaterialDto'
 import CandidateDto from '@/models/candidate/CandidateDto';
+import FellowshipDto from '@/models/fellowship/FellowshipDto';
 
 const httpClient = axios.create()
 httpClient.defaults.timeout = 10000
@@ -35,6 +36,8 @@ export default class RemoteService {
     return httpClient.delete(`/materials/delete/${material.id}`)
   }
 
+  // ------------------- Candidates -------------------
+
   static async getCandidates() {
     return httpClient.get('/candidates/getAll').then((response) => {
       return response.data.map((candidate: any) => {
@@ -60,4 +63,21 @@ export default class RemoteService {
       return new CandidateDto(response.data)
     })
   }
+
+  // ------------------- Fellowships -------------------
+
+  static async getFellowships() {
+    return httpClient.get('/fellowships/getAll').then((response) => {
+      return response.data.map((fellowship: any) => {
+        return new FellowshipDto(fellowship)
+      })
+    })
+  }
+
+  static async addFellowship(fellowship: FellowshipDto): Promise<FellowshipDto> {
+    return httpClient.post('/fellowships/add', fellowship).then((response) => {
+      return new FellowshipDto(response.data)
+    })
+  }
+
 }
