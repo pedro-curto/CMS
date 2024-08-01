@@ -4,7 +4,7 @@
       <v-btn
           class="text-none font-weight-regular"
           prepend-icon="mdi-plus"
-          text="Add Candidate"
+          text="Add a New Candidate"
           v-bind="activatorProps"
           color="primary"
       ></v-btn>

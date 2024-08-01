@@ -4,30 +4,41 @@
       <h2 class="text-left ml-1">Candidate Listing</h2>
     </v-col>
     <v-col cols="auto">
-      <CreateCandidateDialog @candidate-created="getCandidates" />
+      <CreateCandidateDialog @candidate-created="fetchCandidates" />
     </v-col>
   </v-row>
 
   <v-text-field
-    v-model="search"
-    label="Search"
-    prepend-inner-icon="mdi-magnify"
-    variant="outlined"
-    hide-details
-    single-line
+      v-model="search"
+      label="Search"
+      prepend-inner-icon="mdi-magnify"
+      variant="outlined"
+      hide-details
+      single-line
   ></v-text-field>
 
   <v-data-table
-    :headers="headers"
-    :items="candidates"
-    :search="search"
-    :custom-filter="fuzzySearch"
-    class="text-left"
+      :headers="headers"
+      :items="candidates"
+      :search="search"
+      :custom-filter="fuzzySearch"
+      class="text-left"
   >
-    <template v-slot:item.actions="{ item }">
-      <UpdateCandidateDialog :candidate="item" @candidate-updated="getCandidates" />
+    <template v-slot:[`item.actions`]="{ item }">
+      <v-icon @click="openUpdateDialog(item)" class="mr-2">mdi-pencil</v-icon>
+      <v-icon @click="deleteCandidate(item)" class="mr-2">mdi-delete</v-icon>
     </template>
   </v-data-table>
+
+  <v-dialog v-model="dialog" max-width="400">
+    <UpdateCandidateDialog
+        v-if="selectedCandidate"
+        :candidate="selectedCandidate"
+        @candidate-updated="fetchCandidates"
+        @dialog-close="closeUpdateDialog"
+    />
+  </v-dialog>
+
 </template>
 
 <script setup lang="ts">
@@ -47,25 +58,15 @@ const headers = [
 
 const candidates: CandidateDto[] = reactive([])
 
-getCandidates()
-async function getCandidates() {
-  candidates.splice(0, candidates.length)
-  RemoteService.getCandidates().then(async (data) => {
-    data.forEach((candidate: CandidateDto) => {
-      candidates.push(candidate)
-    })
-  })
-}
-
-/*async function fetchCandidates() {
+async function fetchCandidates() {
   const data = await RemoteService.getCandidates()
-  candidates.splice(0, candidates.length, ...data)
+  candidates.splice(0, candidates.length, ...data) // replaces current array with new data
 }
 
-// fetches new candidates from the backend every second
+// fetches new candidates from the backend every two seconds
 onMounted(() => {
   fetchCandidates()
-  const intervalId = setInterval(fetchCandidates, 1000) //
+  const intervalId = setInterval(fetchCandidates, 2000)
   onUnmounted(() => clearInterval(intervalId))
 })*/
 
