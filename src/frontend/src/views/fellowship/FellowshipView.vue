@@ -26,6 +26,7 @@
   >
     <template v-slot:[`item.actions`]="{ item }">
       <v-icon @click="openUpdateDialog(item)" class="mr-2">mdi-pencil</v-icon>
+      <v-icon @click="deleteFellowship(item)" class="mr-2">mdi-delete</v-icon>
     </template>
   </v-data-table>
 
@@ -46,6 +47,7 @@ import RemoteService from '@/services/RemoteService'
 import type FellowshipDto from '@/models/fellowship/FellowshipDto'
 import CreateFellowshipDialog from '@/views/fellowship/CreateFellowshipDialog.vue'
 import UpdateFellowshipDialog from '@/views/fellowship/UpdateFellowshipDialog.vue'
+import type CandidateDto from "@/models/candidate/CandidateDto";
 
 const search = ref('')
 const headers = [
@@ -79,6 +81,12 @@ function openUpdateDialog(fellowship: FellowshipDto) {
 
 function closeUpdateDialog() {
   dialog.value = false
+}
+
+function deleteFellowship(fellowship: FellowshipDto) {
+  RemoteService.deleteFellowship(fellowship.id).then(() => {
+    fetchFellowships()
+  })
 }
 
 const fuzzySearch = (value: string, search: string) => {

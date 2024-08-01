@@ -86,4 +86,10 @@ export default class RemoteService {
     })
   }
 
+  static async deleteFellowship(fellowshipId: number): Promise<FellowshipDto> {
+    return httpClient.delete(`/fellowships/delete/${fellowshipId}`, fellowshipId).then((response) => {
+      return new FellowshipDto(response.data)
+    })
+  }
+
 }
