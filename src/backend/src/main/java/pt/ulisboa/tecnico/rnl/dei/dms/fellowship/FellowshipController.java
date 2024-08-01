@@ -26,4 +26,21 @@ public class FellowshipController {
         return fellowshipService.addFellowship(FellowshipDto);
     }
 
+    @PutMapping("/update/{id}")
+    public FellowshipDto updateFellowship(@PathVariable Long id, @Valid @RequestBody FellowshipDto fellowshipDto) {
+        return fellowshipService.updateFellowship(id, fellowshipDto);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteFellowship(@PathVariable Long id) {
+        try {
+            fellowshipService.deleteFellowship(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

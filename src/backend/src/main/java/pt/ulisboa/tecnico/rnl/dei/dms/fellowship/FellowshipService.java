@@ -27,5 +27,23 @@ public class FellowshipService {
         fellowshipRepository.save(Fellowship);
         return new FellowshipDto(Fellowship);
     }
+
+    public FellowshipDto updateFellowship(Long id, FellowshipDto FellowshipDto) {
+        Fellowship Fellowship = fellowshipRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Fellowship not found"));
+        Fellowship.setFellowshipId(FellowshipDto.getFellowshipId());
+        Fellowship.setStartDate(FellowshipDto.getStartDate());
+        Fellowship.setEndDate(FellowshipDto.getEndDate());
+        Fellowship.setMonthlyValue(FellowshipDto.getMonthlyValue());
+        fellowshipRepository.save(Fellowship);
+        return new FellowshipDto(Fellowship);
+    }
+
+    public void deleteFellowship(Long id) {
+        if (!fellowshipRepository.existsById(id)) {
+            throw new IllegalArgumentException("Fellowship not found");
+        }
+        fellowshipRepository.deleteById(id);
+    }
     
 }
