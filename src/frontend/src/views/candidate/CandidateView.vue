@@ -57,6 +57,8 @@ const headers = [
 ]
 
 const candidates: CandidateDto[] = reactive([])
+const dialog = ref(false)
+const selectedCandidate = ref<CandidateDto | null>(null)
 
 async function fetchCandidates() {
   const data = await RemoteService.getCandidates()
@@ -68,11 +70,28 @@ onMounted(() => {
   fetchCandidates()
   const intervalId = setInterval(fetchCandidates, 2000)
   onUnmounted(() => clearInterval(intervalId))
-})*/
+})
+
+// Edit candidate dialog
+function openUpdateDialog(candidate: CandidateDto) {
+  selectedCandidate.value = { ...candidate }
+  dialog.value = true
+}
+
+function closeUpdateDialog() {
+  dialog.value = false
+}
+
+function deleteCandidate(candidate: CandidateDto) {
+  RemoteService.deleteCandidate(candidate.id).then(() => {
+    fetchCandidates()
+  })
+}
 
 const fuzzySearch = (value: string, search: string) => {
   // Regex to match any character in between the search characters
   let searchRegex = new RegExp(search.split('').join('.*'), 'i')
   return searchRegex.test(value)
 }
+
 </script>

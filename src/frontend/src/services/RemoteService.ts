@@ -50,8 +50,13 @@ export default class RemoteService {
   }
 
   static async updateCandidate(candidateId: number, candidate: CandidateDto): Promise<CandidateDto> {
-    console.log(candidate)
     return httpClient.put(`/candidates/update/${candidateId}`, candidate).then((response) => {
+      return new CandidateDto(response.data)
+    })
+  }
+
+  static async deleteCandidate(candidateId: number): Promise<CandidateDto> {
+    return httpClient.delete(`/candidates/delete/${candidateId}`, candidate).then((response) => {
       return new CandidateDto(response.data)
     })
   }
