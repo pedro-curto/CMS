@@ -50,7 +50,7 @@ import UpdateCandidateDialog from '@/views/candidate/UpdateCandidateDialog.vue'
 
 const search = ref('')
 const headers = [
-  { title: 'IstID', value: 'id', key: 'id' },
+  { title: 'IstID', value: 'istId', key: 'istId' },
   { title: 'Name', value: 'name', key: 'name' },
   { title: 'Email', value: 'email', key: 'email' },
   { title: 'Actions', value: 'actions', key: 'actions' }

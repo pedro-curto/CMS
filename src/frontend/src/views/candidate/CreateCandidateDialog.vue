@@ -17,6 +17,11 @@
 
       <v-card-text>
         <v-text-field
+            v-model="newCandidate.istId"
+            label="IstID"
+            required
+        ></v-text-field>
+        <v-text-field
           v-model="newCandidate.name"
           label="Name"
           required
