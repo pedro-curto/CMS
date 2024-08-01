@@ -11,7 +11,8 @@ import java.util.List;
 
 public class FellowshipDto {
 	private Long id;
-	private String fellowshipId;
+	private String name;
+	private String description;
 	private LocalDate startDate;
 	private LocalDate endDate;
 	private BigDecimal monthlyValue;
@@ -19,8 +20,9 @@ public class FellowshipDto {
 
 	public FellowshipDto() {}
 
-	public FellowshipDto(String fellowshipId, LocalDate startDate, LocalDate endDate, BigDecimal monthlyValue) {
-		this.fellowshipId = fellowshipId;
+	public FellowshipDto(String name, String description, LocalDate startDate, LocalDate endDate, BigDecimal monthlyValue) {
+		this.name = name;
+		this.description = description;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.monthlyValue = monthlyValue;
@@ -28,7 +30,8 @@ public class FellowshipDto {
 
 	public FellowshipDto(Fellowship fellowship) {
 		this.id = fellowship.getId();
-		this.fellowshipId = fellowship.getFellowshipId();
+		this.name = fellowship.getName();
+		this.description = fellowship.getDescription();
 		this.startDate = fellowship.getStartDate();
 		this.endDate = fellowship.getEndDate();
 		this.monthlyValue = fellowship.getMonthlyValue();
@@ -42,8 +45,12 @@ public class FellowshipDto {
 		return id;
 	}
 
-	public String getFellowshipId() {
-		return fellowshipId;
+	public String getName() {
+		return name;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 	public LocalDate getStartDate() {
@@ -62,8 +69,12 @@ public class FellowshipDto {
 		return candidates;
 	}
 
-	public void setFellowshipId(String fellowshipId) {
-		this.fellowshipId = fellowshipId;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public void setStartDate(LocalDate startDate) {
@@ -78,17 +89,13 @@ public class FellowshipDto {
 		this.monthlyValue = monthlyValue;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public void setCandidates(List<CandidateDto> candidates) {
 		this.candidates = candidates;
 	}
 
 	@Override
 	public String toString() {
-		return "FellowshipDto {id=" + id + ", fellowshipId=" + fellowshipId + ", startDate=" + startDate + ", endDate=" + endDate + ", monthlyValue=" + monthlyValue + "}";
+		return "FellowshipDto {id=" + id + ", name=" + name + ", description=" + description + ", startDate=" + startDate + ", endDate=" + endDate + ", monthlyValue=" + monthlyValue + "}";
 	}
 
 }

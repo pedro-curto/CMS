@@ -2,7 +2,7 @@
   <div class="pa-4 text-center">
       <v-card prepend-icon="mdi-briefcase-edit" title="Update Fellowship Details">
         <v-card-text>
-          <v-text-field label="Name*" required v-model="fellowship.fellowshipId"></v-text-field>
+          <v-text-field label="Name*" required v-model="fellowship.name"></v-text-field>
           <div>
             <label class="v-label">Start Date</label>
             <VueDatePicker

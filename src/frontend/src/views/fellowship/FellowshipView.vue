@@ -51,7 +51,7 @@ import type CandidateDto from "@/models/candidate/CandidateDto";
 
 const search = ref('')
 const headers = [
-  { title: 'Fellowship ID', value: 'fellowshipId', key: 'fellowshipId' },
+  { title: 'Name', value: 'name', key: 'name' },
   { title: 'Start Date', value: 'startDate', key: 'startDate' },
   { title: 'End Date', value: 'endDate', key: 'endDate' },
   { title: 'Monthly Value', value: 'monthlyValue', key: 'monthlyValue' },

@@ -17,8 +17,8 @@
 
       <v-card-text>
         <v-text-field
-            v-model="newFellowship.fellowshipId"
-            label="Fellowship ID"
+            v-model="newFellowship.name"
+            label="Name"
             required
         ></v-text-field>
 
@@ -93,7 +93,7 @@ watch(dialog, (newVal) => {
 })
 
 const resetFellowship = () => {
-  newFellowship.fellowshipId = ''
+  newFellowship.name = ''
   newFellowship.startDate = ''
   newFellowship.endDate = ''
   newFellowship.monthlyValue = ''

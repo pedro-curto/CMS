@@ -19,9 +19,11 @@ public class Fellowship {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@NotBlank(message = "Fellowship ID is mandatory")
+	@NotBlank(message = "Fellowship name is mandatory")
 	@Size(min=3, max=25, message = "Fellowship name must be between 3 and 25 characters")
-	private String fellowshipId;
+	private String name;
+	@Size(max=255, message = "Fellowship description must be less than 255 characters")
+	private String description;
 	@NotNull
 	private LocalDate startDate;
 	@NotNull
@@ -34,15 +36,17 @@ public class Fellowship {
 
 	public Fellowship() {}
 
-	public Fellowship(String fellowshipId, LocalDate startDate, LocalDate endDate, BigDecimal monthlyValue) {
-		this.fellowshipId = fellowshipId;
+	public Fellowship(String name, String description, LocalDate startDate, LocalDate endDate, BigDecimal monthlyValue) {
+		this.name = name;
+		this.description = description;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.monthlyValue = monthlyValue;
 	}
 
 	public Fellowship(FellowshipDto fellowshipDto) {
-		this.fellowshipId = fellowshipDto.getFellowshipId();
+		this.name = fellowshipDto.getName();
+		this.description = fellowshipDto.getDescription();
 		this.startDate = fellowshipDto.getStartDate();
 		this.endDate = fellowshipDto.getEndDate();
 		this.monthlyValue = fellowshipDto.getMonthlyValue();
@@ -52,9 +56,9 @@ public class Fellowship {
 		return id;
 	}
 
-	public String getFellowshipId() {
-		return fellowshipId;
-	}
+	public String getName() { return name; }
+	
+	public String getDescription() { return description; }
 
 	public LocalDate getStartDate() {
 		return startDate;
@@ -72,9 +76,9 @@ public class Fellowship {
 		return candidates;
 	}
 
-	public void setFellowshipId(String fellowshipId) {
-		this.fellowshipId = fellowshipId;
-	}
+	public void setName(String name) { this.name = name; }
+	
+	public void setDescription(String description) { this.description = description; }
 
 	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;

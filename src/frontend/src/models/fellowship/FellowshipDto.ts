@@ -2,7 +2,8 @@ import Candidate from '@models/candidate/Candidate'
 
 export default class FellowshipDto {
     id?: string
-    fellowshipId?: string
+    name?: string
+    description?: string
     startDate?: string
     endDate?: string
     monthlyValue?: number
