@@ -80,4 +80,10 @@ export default class RemoteService {
     })
   }
 
+  static async updateFellowship(fellowshipId: number, fellowship: FellowshipDto): Promise<FellowshipDto> {
+    return httpClient.put(`/fellowships/update/${fellowshipId}`, fellowship).then((response) => {
+      return new FellowshipDto(response.data)
+    })
+  }
+
 }

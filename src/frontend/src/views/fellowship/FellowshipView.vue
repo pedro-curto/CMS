@@ -24,7 +24,20 @@
       :custom-filter="fuzzySearch"
       class="text-left"
   >
+    <template v-slot:[`item.actions`]="{ item }">
+      <v-icon @click="openUpdateDialog(item)" class="mr-2">mdi-pencil</v-icon>
+    </template>
   </v-data-table>
+
+  <v-dialog v-model="dialog" max-width="400">
+    <UpdateFellowshipDialog
+        v-if="selectedFellowship"
+        :fellowship="selectedFellowship"
+        @fellowship-updated="fetchFellowships"
+        @dialog-close="closeUpdateDialog"
+    />
+  </v-dialog>
+
 </template>
 
 <script setup lang="ts">
@@ -32,6 +45,7 @@ import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import RemoteService from '@/services/RemoteService'
 import type FellowshipDto from '@/models/fellowship/FellowshipDto'
 import CreateFellowshipDialog from '@/views/fellowship/CreateFellowshipDialog.vue'
+import UpdateFellowshipDialog from '@/views/fellowship/UpdateFellowshipDialog.vue'
 
 const search = ref('')
 const headers = [
@@ -57,6 +71,15 @@ onMounted(() => {
   const intervalId = setInterval(fetchFellowships, 2000)
   onUnmounted(() => clearInterval(intervalId))
 })
+
+function openUpdateDialog(fellowship: FellowshipDto) {
+  selectedFellowship.value = { ...fellowship }
+  dialog.value = true
+}
+
+function closeUpdateDialog() {
+  dialog.value = false
+}
 
 const fuzzySearch = (value: string, search: string) => {
   // Regex to match any character in between the search characters
