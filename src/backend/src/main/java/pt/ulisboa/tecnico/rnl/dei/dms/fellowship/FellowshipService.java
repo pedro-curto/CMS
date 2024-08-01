@@ -22,6 +22,12 @@ public class FellowshipService {
                 .collect(Collectors.toList());
     }
 
+    public FellowshipDto getFellowship(Long id) {
+        Fellowship fellowship = fellowshipRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Fellowship not found"));
+        return new FellowshipDto(fellowship);
+    }
+
     public FellowshipDto addFellowship(FellowshipDto FellowshipDto) {
         Fellowship Fellowship = new Fellowship(FellowshipDto);
         fellowshipRepository.save(Fellowship);

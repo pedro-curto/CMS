@@ -21,6 +21,11 @@ public class FellowshipController {
         return fellowshipService.getFellowships();
     }
 
+    @GetMapping("/get/{id}")
+    public FellowshipDto getFellowship(@PathVariable Long id) {
+        return fellowshipService.getFellowship(id);
+    }
+
     @PostMapping("/add")
     public FellowshipDto addFellowship(@Valid @RequestBody FellowshipDto FellowshipDto) {
         return fellowshipService.addFellowship(FellowshipDto);

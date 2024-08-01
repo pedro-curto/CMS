@@ -25,6 +25,7 @@
       class="text-left"
   >
     <template v-slot:[`item.actions`]="{ item }">
+      <v-icon @click="openDetailsDialog(item)" class="mr-2">mdi-eye</v-icon>
       <v-icon @click="openUpdateDialog(item)" class="mr-2">mdi-pencil</v-icon>
       <v-icon @click="deleteFellowship(item)" class="mr-2">mdi-delete</v-icon>
     </template>
@@ -48,6 +49,7 @@ import type FellowshipDto from '@/models/fellowship/FellowshipDto'
 import CreateFellowshipDialog from '@/views/fellowship/CreateFellowshipDialog.vue'
 import UpdateFellowshipDialog from '@/views/fellowship/UpdateFellowshipDialog.vue'
 import type CandidateDto from "@/models/candidate/CandidateDto";
+import router from '@/router'
 
 const search = ref('')
 const headers = [
@@ -73,6 +75,11 @@ onMounted(() => {
   const intervalId = setInterval(fetchFellowships, 2000)
   onUnmounted(() => clearInterval(intervalId))
 })
+
+function openDetailsDialog(fellowship: FellowshipDto) {
+  console.log(router)
+  router.push({ name: 'fellowshipDetails', params: { id: fellowship.id } })
+}
 
 function openUpdateDialog(fellowship: FellowshipDto) {
   selectedFellowship.value = { ...fellowship }

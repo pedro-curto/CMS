@@ -74,6 +74,12 @@ export default class RemoteService {
     })
   }
 
+  static async getFellowshipById(fellowshipId: number): Promise<FellowshipDto> {
+    return httpClient.get(`/fellowships/get/${fellowshipId}`).then((response) => {
+        return new FellowshipDto(response.data)
+    })
+  }
+
   static async addFellowship(fellowship: FellowshipDto): Promise<FellowshipDto> {
     return httpClient.post('/fellowships/add', fellowship).then((response) => {
       return new FellowshipDto(response.data)
