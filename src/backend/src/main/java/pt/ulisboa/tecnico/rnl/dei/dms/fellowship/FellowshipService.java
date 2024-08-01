@@ -2,6 +2,9 @@ package pt.ulisboa.tecnico.rnl.dei.dms.fellowship;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pt.ulisboa.tecnico.rnl.dei.dms.candidate.domain.Candidate;
+import pt.ulisboa.tecnico.rnl.dei.dms.candidate.dto.CandidateDto;
+import pt.ulisboa.tecnico.rnl.dei.dms.candidate.repository.CandidateRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain.Fellowship;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto.FellowshipDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.repository.FellowshipRepository;
@@ -14,6 +17,8 @@ public class FellowshipService {
 
     @Autowired
     private FellowshipRepository fellowshipRepository;
+    @Autowired
+    private CandidateRepository candidateRepository;
 
     public List<FellowshipDto> getFellowships() {
         return fellowshipRepository.findAll()
@@ -28,10 +33,18 @@ public class FellowshipService {
         return new FellowshipDto(fellowship);
     }
 
-    public FellowshipDto addFellowship(FellowshipDto FellowshipDto) {
-        Fellowship Fellowship = new Fellowship(FellowshipDto);
-        fellowshipRepository.save(Fellowship);
-        return new FellowshipDto(Fellowship);
+    public FellowshipDto addFellowship(FellowshipDto fellowshipDto) {
+        Fellowship fellowship = new Fellowship(fellowshipDto);
+        // adds candidates to the fellowship
+        if (fellowshipDto.getCandidates() != null) {
+            for (CandidateDto candidateDto : fellowshipDto.getCandidates()) {
+                Candidate candidate = candidateRepository.findByIstId(candidateDto.getIstId())
+                        .orElseThrow(() -> new IllegalArgumentException("Candidate not found"));
+                fellowship.addCandidate(candidate);
+            }
+        }
+        fellowshipRepository.save(fellowship);
+        return new FellowshipDto(fellowship);
     }
 
     public FellowshipDto updateFellowship(Long id, FellowshipDto fellowshipDto) {

@@ -27,8 +27,8 @@ public class FellowshipController {
     }
 
     @PostMapping("/add")
-    public FellowshipDto addFellowship(@Valid @RequestBody FellowshipDto FellowshipDto) {
-        return fellowshipService.addFellowship(FellowshipDto);
+    public FellowshipDto addFellowship(@Valid @RequestBody FellowshipDto fellowshipDto) {
+        return fellowshipService.addFellowship(fellowshipDto);
     }
 
     @PutMapping("/update/{id}")

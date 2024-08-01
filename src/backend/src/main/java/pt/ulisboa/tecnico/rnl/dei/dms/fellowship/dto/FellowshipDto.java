@@ -95,7 +95,8 @@ public class FellowshipDto {
 
 	@Override
 	public String toString() {
-		return "FellowshipDto {id=" + id + ", name=" + name + ", description=" + description + ", startDate=" + startDate + ", endDate=" + endDate + ", monthlyValue=" + monthlyValue + "}";
+		return "FellowshipDto {id=" + id + ", name=" + name + ", description=" + description + ", startDate=" + startDate + ", endDate=" + endDate + ", monthlyValue=" + monthlyValue +
+				", candidates=" + candidates + "}";
 	}
 
 }
