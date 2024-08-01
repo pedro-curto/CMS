@@ -1,6 +1,9 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.fellowship;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto.FellowshipDto;
 
@@ -19,7 +22,7 @@ public class FellowshipController {
     }
 
     @PostMapping("/add")
-    public FellowshipDto addFellowship(@RequestBody FellowshipDto FellowshipDto) {
+    public FellowshipDto addFellowship(@Valid @RequestBody FellowshipDto FellowshipDto) {
         return fellowshipService.addFellowship(FellowshipDto);
     }
 

@@ -1,6 +1,10 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidate.domain.Candidate;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto.FellowshipDto;
 
@@ -15,9 +19,15 @@ public class Fellowship {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@NotBlank(message = "Fellowship ID is mandatory")
+	@Size(min=3, max=25, message = "Fellowship name must be between 1 and 50 characters")
 	private String fellowshipId;
+	@NotNull
 	private LocalDate startDate;
+	@NotNull
 	private LocalDate endDate;
+	@DecimalMin(value="0.0", inclusive=false, message = "Fellowship value must be greater than 0")
+	@NotNull
 	private BigDecimal monthlyValue;
 	@ManyToMany
 	private List<Candidate> candidates = new ArrayList<>();
