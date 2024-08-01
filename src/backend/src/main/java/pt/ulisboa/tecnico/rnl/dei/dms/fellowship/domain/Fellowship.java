@@ -20,7 +20,7 @@ public class Fellowship {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@NotBlank(message = "Fellowship ID is mandatory")
-	@Size(min=3, max=25, message = "Fellowship name must be between 1 and 50 characters")
+	@Size(min=3, max=25, message = "Fellowship name must be between 3 and 25 characters")
 	private String fellowshipId;
 	@NotNull
 	private LocalDate startDate;
