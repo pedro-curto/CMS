@@ -56,7 +56,7 @@ export default class RemoteService {
   }
 
   static async deleteCandidate(candidateId: number): Promise<CandidateDto> {
-    return httpClient.delete(`/candidates/delete/${candidateId}`, candidate).then((response) => {
+    return httpClient.delete(`/candidates/delete/${candidateId}`, candidateId).then((response) => {
       return new CandidateDto(response.data)
     })
   }
