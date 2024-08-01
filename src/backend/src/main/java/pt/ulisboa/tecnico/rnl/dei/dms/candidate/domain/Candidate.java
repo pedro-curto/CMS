@@ -2,6 +2,10 @@ package pt.ulisboa.tecnico.rnl.dei.dms.candidate.domain;
 
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidate.dto.CandidateDto;
+import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain.Fellowship;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "candidate")
@@ -13,6 +17,8 @@ public class Candidate {
 	private String istId;
 	private String name;
 	private String email;
+	@ManyToMany(mappedBy = "candidates")
+	private List<Fellowship> fellowships = new ArrayList<>();
 
 	public Candidate() {}
 
