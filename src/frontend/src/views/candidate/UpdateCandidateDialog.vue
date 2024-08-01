@@ -58,9 +58,8 @@ const openDialog = () => {
 }
 
 const saveCandidate = async () => {
-  await RemoteService.updateCandidate(candidate.value)
+  await RemoteService.updateCandidate(candidate.value.id, candidate.value)
   emit('candidate-updated')
-  dialog.value = false
 }
 
 </script>

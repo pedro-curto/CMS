@@ -16,7 +16,10 @@ public class CandidateService {
     private CandidateRepository candidateRepository;
 
     public List<CandidateDto> getCandidates() {
-        return candidateRepository.findAll().stream().map(CandidateDto::new).collect(Collectors.toList());
+        return candidateRepository.findAll()
+                .stream()
+                .map(CandidateDto::new)
+                .collect(Collectors.toList());
     }
 
     public CandidateDto addCandidate(CandidateDto candidateDto) {
@@ -25,8 +28,8 @@ public class CandidateService {
         return new CandidateDto(candidate);
     }
 
-    public CandidateDto updateCandidate(CandidateDto candidateDto) {
-        Candidate candidate = candidateRepository.findById(candidateDto.getId())
+    public CandidateDto updateCandidate(Long id, CandidateDto candidateDto) {
+        Candidate candidate = candidateRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Candidate not found"));
         candidate.setName(candidateDto.getName());
         candidate.setEmail(candidateDto.getEmail());

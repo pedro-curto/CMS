@@ -1,7 +1,7 @@
 <template>
   <v-row align="center">
     <v-col>
-      <h2 class="text-left ml-1">Listagem de Candidatos</h2>
+      <h2 class="text-left ml-1">Candidate Listing</h2>
     </v-col>
     <v-col cols="auto">
       <CreateCandidateDialog @candidate-created="getCandidates" />
@@ -31,17 +31,16 @@
 </template>
 
 <script setup lang="ts">
-import CreateCandidateDialog from '@/views/candidate/CreateCandidateDialog.vue'
-import { ref } from 'vue'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import RemoteService from '@/services/RemoteService'
-import { reactive } from 'vue'
-import type CandidateDto from "@/models/candidate/CandidateDto"
-import UpdateCandidateDialog from "@/views/candidate/UpdateCandidateDialog.vue"
+import type CandidateDto from '@/models/candidate/CandidateDto'
+import CreateCandidateDialog from '@/views/candidate/CreateCandidateDialog.vue'
+import UpdateCandidateDialog from '@/views/candidate/UpdateCandidateDialog.vue'
 
 const search = ref('')
 const headers = [
   { title: 'IstID', value: 'id', key: 'id' },
-  { title: 'Nome', value: 'name', key: 'name' },
+  { title: 'Name', value: 'name', key: 'name' },
   { title: 'Email', value: 'email', key: 'email' },
   { title: 'Actions', value: 'actions', key: 'actions' }
 ]
@@ -57,6 +56,18 @@ async function getCandidates() {
     })
   })
 }
+
+/*async function fetchCandidates() {
+  const data = await RemoteService.getCandidates()
+  candidates.splice(0, candidates.length, ...data)
+}
+
+// fetches new candidates from the backend every second
+onMounted(() => {
+  fetchCandidates()
+  const intervalId = setInterval(fetchCandidates, 1000) //
+  onUnmounted(() => clearInterval(intervalId))
+})*/
 
 const fuzzySearch = (value: string, search: string) => {
   // Regex to match any character in between the search characters
