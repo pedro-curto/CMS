@@ -36,5 +36,12 @@ public class CandidateService {
         candidateRepository.save(candidate);
         return new CandidateDto(candidate);
     }
+
+    public void deleteCandidate(Long id) {
+        if (!candidateRepository.existsById(id)) {
+            throw new IllegalArgumentException("Candidate not found");
+        }
+        candidateRepository.deleteById(id);
+    }
     
 }

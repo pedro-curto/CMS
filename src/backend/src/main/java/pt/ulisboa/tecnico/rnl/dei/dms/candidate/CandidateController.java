@@ -35,7 +35,16 @@ public class CandidateController {
 		}
     }
 
-      return CandidateService.updateCandidate(candidateDto);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteCandidate(@PathVariable Long id) {
+        try {
+            candidateService.deleteCandidate(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
