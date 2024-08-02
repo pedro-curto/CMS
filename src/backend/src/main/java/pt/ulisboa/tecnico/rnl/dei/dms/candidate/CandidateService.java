@@ -22,6 +22,12 @@ public class CandidateService {
                 .collect(Collectors.toList());
     }
 
+    public CandidateDto getCandidate(Long id) {
+        Candidate candidate = candidateRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Candidate not found"));
+        return new CandidateDto(candidate);
+    }
+
     public CandidateDto addCandidate(CandidateDto candidateDto) {
         Candidate candidate = new Candidate(candidateDto);
         candidateRepository.save(candidate);

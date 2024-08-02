@@ -25,6 +25,7 @@
       class="text-left"
   >
     <template v-slot:[`item.actions`]="{ item }">
+      <v-icon @click="openCandidateDetails(item)" class="mr-2">mdi-eye</v-icon>
       <v-icon @click="openUpdateDialog(item)" class="mr-2">mdi-pencil</v-icon>
       <v-icon @click="deleteCandidate(item)" class="mr-2">mdi-delete</v-icon>
     </template>
@@ -47,6 +48,7 @@ import RemoteService from '@/services/RemoteService'
 import type CandidateDto from '@/models/candidate/CandidateDto'
 import CreateCandidateDialog from '@/views/candidate/CreateCandidateDialog.vue'
 import UpdateCandidateDialog from '@/views/candidate/UpdateCandidateDialog.vue'
+import router from "@/router";
 
 const search = ref('')
 const headers = [
@@ -86,6 +88,10 @@ function deleteCandidate(candidate: CandidateDto) {
   RemoteService.deleteCandidate(candidate.id).then(() => {
     fetchCandidates()
   })
+}
+
+function openCandidateDetails(candidate: CandidateDto) {
+  router.push({ name: 'candidateDetails', params: { id: candidate.id } })
 }
 
 const fuzzySearch = (value: string, search: string) => {

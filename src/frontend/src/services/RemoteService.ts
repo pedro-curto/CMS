@@ -3,6 +3,7 @@ import axios from 'axios'
 import MaterialDto from '@/models/materials/MaterialDto'
 import CandidateDto from '@/models/candidate/CandidateDto';
 import FellowshipDto from '@/models/fellowship/FellowshipDto';
+import EnrollmentDto from "@/models/enrollment/EnrollmentDto";
 
 const httpClient = axios.create()
 httpClient.defaults.timeout = 10000
@@ -46,6 +47,12 @@ export default class RemoteService {
     })
   }
 
+  static async getCandidateById(candidateId: number): Promise<CandidateDto> {
+    return httpClient.get(`/candidates/get/${candidateId}`).then((response) => {
+      return new CandidateDto(response.data)
+    })
+  }
+
     static async addCandidate(candidate: CandidateDto): Promise<CandidateDto> {
     return httpClient.post('/candidates/add', candidate).then((response) => {
       return new CandidateDto(response.data)
@@ -63,18 +70,6 @@ export default class RemoteService {
       return new CandidateDto(response.data)
     })
   }
-
-  static async enrollCandidate(fellowshipId: number, candidateId: string): Promise<CandidateDto> {
-    return httpClient.post(`/fellowships/${fellowshipId}/enroll`, null, {params: { candidateId } }).then((response) => {
-      return new CandidateDto(response.data)
-    })
-  }
-
-    static async unenrollCandidate(fellowshipId: number, candidateId: string): Promise<CandidateDto> {
-        return httpClient.post(`/fellowships/${fellowshipId}/unenroll`, null, { params: { candidateId } }).then((response) => {
-        return new CandidateDto(response.data)
-        })
-    }
 
   // ------------------- Fellowships -------------------
 

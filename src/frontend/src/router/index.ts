@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import MaterialView from '@/views/materials/MaterialView.vue'
 import CandidateView from '@/views/candidate/CandidateView.vue'
+import CandidateDetailsView from '@/views/candidate/CandidateDetailsView.vue'
 import FellowshipView from '@/views/fellowship/FellowshipView.vue'
 import FellowshipDetails from '@/views/fellowship/FellowshipDetails.vue'
 import FellowshipCandidates from '@/views/fellowship/FellowshipCandidatesManagement.vue'
@@ -33,6 +34,11 @@ const router = createRouter({
       path: '/candidates',
       name: 'candidates',
       component: CandidateView
+    },
+    {
+      path: '/candidate/:id',
+      name: 'candidateDetails',
+      component: CandidateDetailsView,
     },
     {
       path: '/fellowships',

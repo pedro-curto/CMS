@@ -20,6 +20,11 @@ public class CandidateController {
         return candidateService.getCandidates();
     }
 
+    @GetMapping("/get/{id}")
+    public CandidateDto getCandidate(@PathVariable Long id) {
+        return candidateService.getCandidate(id);
+    }
+
     @PostMapping("/add")
     public CandidateDto addCandidate(@RequestBody CandidateDto candidateDto) {
         return candidateService.addCandidate(candidateDto);
