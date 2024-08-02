@@ -64,6 +64,18 @@ export default class RemoteService {
     })
   }
 
+  static async enrollCandidate(fellowshipId: number, candidateId: string): Promise<CandidateDto> {
+    return httpClient.post(`/fellowships/${fellowshipId}/enroll`, null, {params: { candidateId } }).then((response) => {
+      return new CandidateDto(response.data)
+    })
+  }
+
+    static async unenrollCandidate(fellowshipId: number, candidateId: string): Promise<CandidateDto> {
+        return httpClient.post(`/fellowships/${fellowshipId}/unenroll`, null, { params: { candidateId } }).then((response) => {
+        return new CandidateDto(response.data)
+        })
+    }
+
   // ------------------- Fellowships -------------------
 
   static async getFellowships() {
@@ -93,9 +105,8 @@ export default class RemoteService {
   }
 
   static async deleteFellowship(fellowshipId: number): Promise<FellowshipDto> {
-    return httpClient.delete(`/fellowships/delete/${fellowshipId}`, fellowshipId).then((response) => {
-      return new FellowshipDto(response.data)
+    return httpClient.delete(`/fellowships/delete/${fellowshipId}`).then((response) => {
+      return new FellowshipDto(response)
     })
   }
-
 }

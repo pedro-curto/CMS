@@ -1,7 +1,7 @@
 import Candidate from '@models/candidate/Candidate'
 
 export default class FellowshipDto {
-    id?: string
+    id: number | null = null;
     name?: string
     description?: string
     startDate?: string

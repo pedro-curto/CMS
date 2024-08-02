@@ -26,6 +26,7 @@
   >
     <template v-slot:[`item.actions`]="{ item }">
       <v-icon @click="openDetailsDialog(item)" class="mr-2">mdi-eye</v-icon>
+      <v-icon @click="openCandidatesPage(item)" class="mr-2">mdi-account-group</v-icon>
       <v-icon @click="openUpdateDialog(item)" class="mr-2">mdi-pencil</v-icon>
       <v-icon @click="deleteFellowship(item)" class="mr-2">mdi-delete</v-icon>
     </template>
@@ -77,8 +78,11 @@ onMounted(() => {
 })
 
 function openDetailsDialog(fellowship: FellowshipDto) {
-  console.log(router)
   router.push({ name: 'fellowshipDetails', params: { id: fellowship.id } })
+}
+
+function openCandidatesPage(fellowship: FellowshipDto) {
+  router.push({ name: 'fellowshipCandidates', params: { id: fellowship.id } })
 }
 
 function openUpdateDialog(fellowship: FellowshipDto) {
