@@ -20,8 +20,8 @@
           <v-card-text>
             <v-chip color="primary" text-color="white">{{ candidate.email }}</v-chip>
           </v-card-text>
-          <v-btn v-if="!isEnrolled(candidate.istId)" color="success" @click="enrollCandidate(candidate.istId)">Enroll</v-btn>
-          <v-btn v-if="isEnrolled(candidate.istId)" color="error" @click="unenrollCandidate(candidate.istId)">Unenroll</v-btn>
+          <v-btn v-if="!isEnrolled(candidate.id)" color="success" @click="enrollCandidate(candidate.id)">Enroll</v-btn>
+          <v-btn v-if="isEnrolled(candidate.id)" color="error" @click="unenrollCandidate(candidate.id)">Unenroll</v-btn>
         </v-card>
       </v-col>
     </v-row>
@@ -42,59 +42,58 @@ import router from "@/router";
 const route = useRoute()
 const loading = ref(true)
 const fellowship = ref<FellowshipDto | null>(null)
+const enrolledCandidates = ref<CandidateDto[]>([])
 const allCandidates = ref<CandidateDto[]>([])
-const candidates = ref<CandidateDto[]>([])
-const candidateHeaders = [
-  { title: 'Name', value: 'name' },
-  { title: 'Email', value: 'email' },
-  { title: 'IST ID', value: 'istId' }
-]
 
 async function fetchFellowshipAndCandidates() {
-  const fellowshipId = route.params.id as string
+  const fellowshipId = Number(route.params.id)
   try {
-    fellowship.value = fetchFellowship(fellowshipId)
+    fellowship.value = await RemoteService.getFellowshipById(fellowshipId)
     allCandidates.value = await RemoteService.getCandidates()
+    enrolledCandidates.value = await RemoteService.getEnrolledCandidatesByFellowship(fellowshipId)
   } catch (error) {
     console.error('Failed to fetch fellowship or candidates:', error)
-  }
-}
-
-async function fetchFellowship(id: string) {
-  try {
-    fellowship.value = await RemoteService.getFellowshipById(id)
-  } catch (err) {
-    err.value = 'Failed to fetch fellowship details.'
-    console.error(err)
   } finally {
     loading.value = false
   }
 }
 
-async function enrollCandidate(candidateId: string) {
+async function enrollCandidate(candidateId: number) {
+  // constructs an enrollmentDto object and sends it to the backend
+  const enrollmentDto = {
+    motivation: '',
+    enrollmentDateTime: new Date(),
+    fellowshipId: fellowship.value?.id,
+    candidateId: candidateId
+  }
   try {
     if (fellowship.value) {
-      await RemoteService.enrollCandidate(Number(fellowship.value.id), candidateId)
-      fetchFellowship(route.params.id as string) // Refresh the fellowship data
+      await RemoteService.enrollCandidate(enrollmentDto)
+      enrolledCandidates.value = [...enrolledCandidates.value,
+        allCandidates.value.find(candidate => candidate.id === candidateId)]
     }
   } catch (err) {
     console.error('Failed to enroll candidate:', err)
   }
 }
 
-async function unenrollCandidate(candidateId: string) {
+async function unenrollCandidate(candidateId: number) {
   try {
     if (fellowship.value) {
       await RemoteService.unenrollCandidate(fellowship.value.id, candidateId)
-      fetchFellowship(route.params.id as string) // Refresh the fellowship data
+      // removes the candidate from the enrolledCandidates list
+      enrolledCandidates.value = enrolledCandidates.value.filter(candidate => candidate.id !== candidateId)
     }
   } catch (err) {
     console.error('Failed to unenroll candidate:', err)
   }
 }
 
-function isEnrolled(candidateIstId: string): boolean {
-  return fellowship.value?.candidates.some(c => c.istId === candidateIstId) ?? false
+function isEnrolled(candidateId: number): boolean {
+  if (fellowship.value) {
+    return enrolledCandidates.value.some(candidate => candidate.id === candidateId)
+  }
+  return false
 }
 
 function goBack() {

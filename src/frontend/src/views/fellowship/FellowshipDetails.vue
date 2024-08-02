@@ -88,17 +88,17 @@ import type CandidateDto from "@/models/candidate/CandidateDto";
 const route = useRoute()
 const router = useRouter()
 const fellowship = ref<FellowshipDto | null>(null)
-const allCandidates = ref<CandidateDto[]>([])
+const enrolledCandidates = ref<CandidateDto[]>([])
 const loading = ref(true)
 const error = ref<string | null>(null)
 
 onMounted(() => {
-  const fellowshipId = route.params.id as string
+  const fellowshipId = Number(route.params.id)
   fetchFellowship(fellowshipId)
-  fetchAllCandidates()
+  fetchEnrolledCandidates(fellowshipId)
 })
 
-async function fetchFellowship(id: string) {
+async function fetchFellowship(id: number) {
   try {
     fellowship.value = await RemoteService.getFellowshipById(id)
   } catch (err) {
@@ -109,21 +109,14 @@ async function fetchFellowship(id: string) {
   }
 }
 
-async function fetchAllCandidates() {
+async function fetchEnrolledCandidates(fellowshipId: number) {
   try {
-    allCandidates.value = await RemoteService.getCandidates()
+    enrolledCandidates.value = await RemoteService.getEnrolledCandidatesByFellowship(fellowshipId)
   } catch (err) {
-    error.value = 'Failed to fetch candidates.'
+    error.value = 'Failed to fetch enrolled candidates.'
     console.error(err)
   }
 }
-
-// Filter enrolled candidates
-const enrolledCandidates = computed(() => {
-  return allCandidates.value.filter(candidate =>
-      fellowship.value?.candidates.some(c => c.istId === candidate.istId)
-  )
-})
 
 function goBack() {
   router.back()

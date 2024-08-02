@@ -109,4 +109,36 @@ export default class RemoteService {
       return new FellowshipDto(response)
     })
   }
+
+  // ------------------- Enrollments -------------------
+
+  static async enrollCandidate(enrollmentDto: EnrollmentDto): Promise<EnrollmentDto> {
+    return httpClient.post('/enrollments/enroll', enrollmentDto).then((response) => {
+      return new EnrollmentDto(response.data)
+    })
+  }
+
+  static async unenrollCandidate(fellowshipId: number, candidateId: number): Promise<EnrollmentDto> {
+    return httpClient.delete(`/enrollments/unenroll`,
+        { params: { fellowshipId, candidateId}})
+        .then((response) => {
+          return new EnrollmentDto(response.data)
+        })
+  }
+
+  static async getEnrolledCandidatesByFellowship(fellowshipId: number): Promise<CandidateDto[]> {
+    return httpClient.get(`/enrollments/fellowships/${fellowshipId}/candidates`).then((response) => {
+      return response.data.map((candidate: any) => {
+        return new CandidateDto(candidate)
+      })
+    })
+  }
+
+  static async getCandidateFellowships(candidateId: number): Promise<FellowshipDto[]> {
+    return httpClient.get(`/enrollments/candidates/${candidateId}/fellowships`).then((response) => {
+      return response.data.map((fellowship: any) => {
+        return new FellowshipDto(fellowship)
+      })
+    })
+  }
 }
