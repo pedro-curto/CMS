@@ -93,31 +93,6 @@ INSERT INTO enrollment (candidate_id, fellowship_id, enrollment_date_time, motiv
                                                                                            (20, 19, '2023-12-11 19:00:00', 'Focus on environmental science.'),
                                                                                            (20, 20, '2023-12-12 20:00:00', 'Research in public policy.');
 
--- Generate additional entries to reach around 100 enrollments
--- This will involve repeating some candidate-fellowship combinations
-
-INSERT INTO enrollment (candidate_id, fellowship_id, enrollment_date_time, motivation) VALUES
-                                                                                           (1, 5, '2023-12-13 21:00:00', 'Interested in social sciences as well.'),
-                                                                                           (2, 6, '2023-12-14 22:00:00', 'Environmental conservation interests.'),
-                                                                                           (3, 7, '2023-12-15 23:00:00', 'Educational systems improvement.'),
-                                                                                           (4, 8, '2023-12-16 09:30:00', 'Economic models research.'),
-                                                                                           (5, 9, '2023-12-17 10:30:00', 'Technology and innovation.'),
-                                                                                           (6, 10, '2023-12-18 11:30:00', 'Humanities exploration.'),
-                                                                                           (7, 11, '2023-12-19 12:30:00', 'Health sciences improvements.'),
-                                                                                           (8, 12, '2023-12-20 13:30:00', 'Physics concepts research.'),
-                                                                                           (9, 13, '2023-12-21 14:30:00', 'Chemistry techniques focus.'),
-                                                                                           (10, 14, '2023-12-22 15:30:00', 'Biological processes research.'),
-                                                                                           (11, 15, '2023-12-23 16:30:00', 'Mathematics advancements.'),
-                                                                                           (12, 16, '2023-12-24 17:30:00', 'Geological research focus.'),
-                                                                                           (13, 17, '2023-12-25 18:30:00', 'Astronomical studies.'),
-                                                                                           (14, 18, '2023-12-26 19:30:00', 'Engineering advancements.'),
-                                                                                           (15, 19, '2023-12-27 20:30:00', 'Environmental science focus.'),
-                                                                                           (16, 20, '2023-12-28 21:30:00', 'Public policy research.'),
-                                                                                           (17, 1, '2023-12-29 22:30:00', 'AI and technology interest.'),
-                                                                                           (18, 2, '2023-12-30 23:30:00', 'Medical research interest.'),
-                                                                                           (19, 3, '2024-01-01 09:00:00', 'Engineering focus.'),
-                                                                                           (20, 4, '2024-01-02 10:00:00', 'Arts and humanities research.');
-
 INSERT INTO enrollment (candidate_id, fellowship_id, enrollment_date_time, motivation) VALUES
                                                                                            (1, 5, '2023-12-13 21:00:00', 'Interested in social sciences as well.'),
                                                                                            (2, 6, '2023-12-14 22:00:00', 'Environmental conservation interests.'),
