@@ -5,7 +5,8 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import pt.ulisboa.tecnico.rnl.dei.dms.candidate.domain.Candidate;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto.FellowshipDto;
 
@@ -16,6 +17,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "fellowship")
+@Data
+@NoArgsConstructor
 public class Fellowship {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,8 +38,6 @@ public class Fellowship {
 	@OneToMany(mappedBy = "fellowship")
 	private List<Enrollment> enrollments = new ArrayList<>();
 
-	public Fellowship() {}
-
 	public Fellowship(String name, String description, LocalDate startDate, LocalDate endDate, BigDecimal monthlyValue) {
 		this.name = name;
 		this.description = description;
@@ -52,50 +53,6 @@ public class Fellowship {
 		this.endDate = fellowshipDto.getEndDate();
 		this.monthlyValue = fellowshipDto.getMonthlyValue();
 	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public String getName() { return name; }
-	
-	public String getDescription() { return description; }
-
-	public LocalDate getStartDate() {
-		return startDate;
-	}
-
-	public LocalDate getEndDate() {
-		return endDate;
-	}
-
-	public BigDecimal getMonthlyValue() {
-		return monthlyValue;
-	}
-
-	public List<Enrollment> getEnrollments() { return enrollments; }
-
-	public void setName(String name) { this.name = name; }
-	
-	public void setDescription(String description) { this.description = description; }
-
-	public void setStartDate(LocalDate startDate) {
-		this.startDate = startDate;
-	}
-
-	public void setEndDate(LocalDate endDate) {
-		this.endDate = endDate;
-	}
-
-	public void setMonthlyValue(BigDecimal monthlyValue) {
-		this.monthlyValue = monthlyValue;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public void setEnrollments(List<Enrollment> enrollments) { this.enrollments = enrollments; }
 
 	public void addEnrollment(Enrollment enrollment) {
 		enrollments.add(enrollment);

@@ -1,6 +1,10 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidate.domain.Candidate;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidate.dto.CandidateDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.dto.EnrollmentDto;
@@ -8,6 +12,10 @@ import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain.Fellowship;
 
 @Entity
 @Table(name = "enrollment")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Enrollment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,12 +27,9 @@ public class Enrollment {
 	@ManyToOne
 	private Candidate candidate;
 
-	public Enrollment() {
-	}
-
 	public Enrollment(Fellowship fellowship, Candidate candidate, EnrollmentDto enrollmentDto) {
-		this.fellowship = fellowship;
-		this.candidate = candidate;
+		setFellowship(fellowship);
+		setCandidate(candidate);
 		this.motivation = enrollmentDto.getMotivation();
 		this.enrollmentDateTime = enrollmentDto.getEnrollmentDateTime();
 	}
@@ -36,38 +41,14 @@ public class Enrollment {
 		this.candidate = candidate;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getMotivation() {
-		return motivation;
-	}
-
-	public void setMotivation(String motivation) { this.motivation = motivation; }
-
-	public String getEnrollmentDateTime() { return enrollmentDateTime; }
-
-	public void setEnrollmentDateTime(String enrollmentDateTime) { this.enrollmentDateTime = enrollmentDateTime; }
-
-	public Fellowship getFellowship() {
-		return fellowship;
-	}
-
 	public void setFellowship(Fellowship fellowship) {
 		this.fellowship = fellowship;
-	}
-
-	public Candidate getCandidate() {
-		return candidate;
+		this.fellowship.addEnrollment(this);
 	}
 
 	public void setCandidate(Candidate candidate) {
 		this.candidate = candidate;
+		this.candidate.addEnrollment(this);
 	}
 
 }
