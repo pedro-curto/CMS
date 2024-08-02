@@ -21,8 +21,8 @@ public class EnrollmentController {
 	public ResponseEntity<EnrollmentDto> enrollCandidate(@RequestBody EnrollmentDto enrollmentDto) {
 		try {
 			EnrollmentDto result = enrollmentService.enrollCandidate(
-					enrollmentDto.getFellowshipId(),
 					enrollmentDto.getCandidateId(),
+					enrollmentDto.getFellowshipId(),
 					enrollmentDto);
 			return new ResponseEntity<>(result, HttpStatus.CREATED);
 		} catch (IllegalArgumentException e) {
@@ -36,6 +36,19 @@ public class EnrollmentController {
 	public ResponseEntity<Void> unenrollCandidate(@RequestParam Long fellowshipId, @RequestParam Long candidateId) {
 		try {
 			enrollmentService.unenrollCandidate(fellowshipId, candidateId);
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		} catch (IllegalArgumentException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<Void> deleteEnrollment(@PathVariable Long id) {
+		System.out.println("EnrollmentId: " + id);
+		try {
+			enrollmentService.deleteEnrollment(id);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (IllegalArgumentException e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -72,5 +85,16 @@ public class EnrollmentController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	@GetMapping("/get")
+	public ResponseEntity<List<EnrollmentDto>> getEnrollments() {
+		return ResponseEntity.ok(enrollmentService.getEnrollments());
+	}
+
+	@GetMapping("/fellowships/{fellowshipId}")
+	public ResponseEntity<List<EnrollmentDto>> getFellowshipEnrollments(@PathVariable Long fellowshipId) {
+		return ResponseEntity.ok(enrollmentService.getFellowshipEnrollments(fellowshipId));
+	}
+
 
 }

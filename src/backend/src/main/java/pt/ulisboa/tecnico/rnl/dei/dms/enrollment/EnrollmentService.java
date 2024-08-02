@@ -45,6 +45,14 @@ public class EnrollmentService {
 		enrollmentRepository.delete(enrollment);
 	}
 
+	@Transactional
+	public void deleteEnrollment(Long id) {
+		Enrollment enrollment = enrollmentRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("Enrollment not found"));
+		enrollmentRepository.delete(enrollment);
+	}
+
+	@Transactional
 	public List<EnrollmentDto> getEnrollmentsByFellowship(Long fellowshipId) {
 		Fellowship fellowship = fellowshipRepository.findById(fellowshipId)
 				.orElseThrow(() -> new IllegalArgumentException("Fellowship not found"));
@@ -55,6 +63,7 @@ public class EnrollmentService {
 				.toList();
 	}
 
+	@Transactional
 	public List<CandidateDto> getEnrolledCandidatesByFellowship(Long fellowshipId) {
 		Fellowship fellowship = fellowshipRepository.findById(fellowshipId)
 				.orElseThrow(() -> new IllegalArgumentException("Fellowship not found"));
@@ -65,6 +74,7 @@ public class EnrollmentService {
 				.collect(Collectors.toList());
 	}
 
+	@Transactional
 	public List<FellowshipDto> getCandidateFellowships(Long candidateId) {
 		Candidate candidate = candidateRepository.findById(candidateId)
 				.orElseThrow(() -> new IllegalArgumentException("Candidate not found"));
@@ -75,4 +85,22 @@ public class EnrollmentService {
 				.collect(Collectors.toList());
 	}
 
+	@Transactional
+	public List<EnrollmentDto> getEnrollments() {
+		return enrollmentRepository.findAll()
+				.stream()
+				.map(EnrollmentDto::new)
+				.collect(Collectors.toList());
+	}
+
+	@Transactional
+	public List<EnrollmentDto> getFellowshipEnrollments(Long fellowshipId) {
+		Fellowship fellowship = fellowshipRepository.findById(fellowshipId)
+				.orElseThrow(() -> new IllegalArgumentException("Fellowship not found"));
+
+		return fellowship.getEnrollments()
+				.stream()
+				.map(EnrollmentDto::new)
+				.collect(Collectors.toList());
+	}
 }
