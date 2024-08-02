@@ -11,7 +11,9 @@ import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.dto.EnrollmentDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain.Fellowship;
 
 @Entity
-@Table(name = "enrollment")
+// guarantee that the combination of fellowship_id and candidate_id is unique
+@Table(name = "enrollment",
+	uniqueConstraints = @UniqueConstraint(columnNames = {"fellowship_id", "candidate_id"}))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,8 +25,10 @@ public class Enrollment {
 	private String motivation;
 	private String enrollmentDateTime;
 	@ManyToOne
+	@JoinColumn(name = "fellowship_id")
 	private Fellowship fellowship;
 	@ManyToOne
+	@JoinColumn(name = "candidate_id")
 	private Candidate candidate;
 
 	public Enrollment(Fellowship fellowship, Candidate candidate, EnrollmentDto enrollmentDto) {
