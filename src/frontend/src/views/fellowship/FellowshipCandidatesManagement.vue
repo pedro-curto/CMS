@@ -38,12 +38,14 @@ import type CandidateDto from '@/models/candidate/CandidateDto'
 import type FellowshipDto from '@/models/fellowship/FellowshipDto'
 import { useRoute } from 'vue-router'
 import router from "@/router";
+import type EnrollmentDto from "@/models/enrollment/EnrollmentDto"
 
 const route = useRoute()
 const loading = ref(true)
 const fellowship = ref<FellowshipDto | null>(null)
 const enrolledCandidates = ref<CandidateDto[]>([])
 const allCandidates = ref<CandidateDto[]>([])
+const fellowshipEnrollments = ref<EnrollmentDto[]>([])
 
 async function fetchFellowshipAndCandidates() {
   const fellowshipId = Number(route.params.id)
@@ -51,6 +53,7 @@ async function fetchFellowshipAndCandidates() {
     fellowship.value = await RemoteService.getFellowshipById(fellowshipId)
     allCandidates.value = await RemoteService.getCandidates()
     enrolledCandidates.value = await RemoteService.getEnrolledCandidatesByFellowship(fellowshipId)
+    fellowshipEnrollments.value = await RemoteService.getFellowshipEnrollments(fellowshipId)
   } catch (error) {
     console.error('Failed to fetch fellowship or candidates:', error)
   } finally {
@@ -62,15 +65,16 @@ async function enrollCandidate(candidateId: number) {
   // constructs an enrollmentDto object and sends it to the backend
   const enrollmentDto = {
     motivation: '',
-    enrollmentDateTime: new Date(),
+    enrollmentDateTime: new Date().toISOString(),
     fellowshipId: fellowship.value?.id,
     candidateId: candidateId
   }
   try {
     if (fellowship.value) {
-      await RemoteService.enrollCandidate(enrollmentDto)
-      enrolledCandidates.value = [...enrolledCandidates.value,
-        allCandidates.value.find(candidate => candidate.id === candidateId)]
+      const newEnrollment = await RemoteService.enrollCandidate(enrollmentDto)
+      // add the candidate to allCandidates and enrolledCandidates list
+      enrolledCandidates.value.push(allCandidates.value.find(candidate => candidate.id === candidateId)!)
+      fellowshipEnrollments.value.push(newEnrollment)
     }
   } catch (err) {
     console.error('Failed to enroll candidate:', err)
@@ -80,9 +84,14 @@ async function enrollCandidate(candidateId: number) {
 async function unenrollCandidate(candidateId: number) {
   try {
     if (fellowship.value) {
-      await RemoteService.unenrollCandidate(fellowship.value.id, candidateId)
-      // removes the candidate from the enrolledCandidates list
-      enrolledCandidates.value = enrolledCandidates.value.filter(candidate => candidate.id !== candidateId)
+      const enrollment = fellowshipEnrollments.value.find(enrollment => enrollment.candidateId === candidateId)
+      if (enrollment) {
+        await RemoteService.deleteEnrollment(enrollment.id)
+        // remove the candidate from the enrolledCandidates list
+        enrolledCandidates.value = enrolledCandidates.value.filter(candidate => candidate.id !== candidateId)
+        // remove the enrollment from the fellowshipEnrollments list
+        fellowshipEnrollments.value = fellowshipEnrollments.value.filter(e => e.id !== enrollment.id)
+      }
     }
   } catch (err) {
     console.error('Failed to unenroll candidate:', err)
@@ -113,5 +122,4 @@ function getAvatarUrl(candidateId: string | undefined): string {
   }
   return `${baseUrl}?name=${defaultText}&size=${size}&background=random`;
 }
-
 </script>

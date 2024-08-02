@@ -121,6 +121,13 @@ export default class RemoteService {
         })
   }
 
+  static async deleteEnrollment(enrollmentId: number): Promise<EnrollmentDto> {
+    return httpClient.delete(`/enrollments/delete/${enrollmentId}`)
+        .then((response) => {
+          return new EnrollmentDto(response.data)
+        });
+  }
+
   static async getEnrolledCandidatesByFellowship(fellowshipId: number): Promise<CandidateDto[]> {
     return httpClient.get(`/enrollments/fellowships/${fellowshipId}/candidates`).then((response) => {
       return response.data.map((candidate: any) => {
@@ -133,6 +140,14 @@ export default class RemoteService {
     return httpClient.get(`/enrollments/candidates/${candidateId}/fellowships`).then((response) => {
       return response.data.map((fellowship: any) => {
         return new FellowshipDto(fellowship)
+      })
+    })
+  }
+
+  static async getFellowshipEnrollments(fellowshipId: number): Promise<EnrollmentDto[]> {
+    return httpClient.get(`/enrollments/fellowships/${fellowshipId}`).then((response) => {
+      return response.data.map((enrollment: any) => {
+        return new EnrollmentDto(enrollment)
       })
     })
   }

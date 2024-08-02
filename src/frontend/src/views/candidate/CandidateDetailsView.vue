@@ -47,7 +47,7 @@
       <v-col v-if="!loading" v-for="fellowship in candidateFellowships" :key="fellowship.id" cols="12" sm="6" md="4">
         <v-card class="fellowship-card" outlined>
           <v-card-title>
-            <v-icon>mdi-trophy</v-icon>
+            <v-icon>mdi-school</v-icon>
             <span>{{ fellowship.name }}</span>
           </v-card-title>
           <v-card-subtitle>{{ fellowship.startDate }} - {{ fellowship.endDate }}</v-card-subtitle>

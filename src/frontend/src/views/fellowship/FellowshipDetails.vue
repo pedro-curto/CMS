@@ -11,7 +11,7 @@
       <v-col>
         <v-card v-if="fellowship" class="pa-6" outlined>
           <v-card-title class="headline">
-            <v-icon>mdi-trophy</v-icon>
+            <v-icon>mdi-school</v-icon>
             {{ fellowship.name }}
           </v-card-title>
           <v-card-subtitle class="text-h6 mb-4">{{ fellowship.description }}</v-card-subtitle>
