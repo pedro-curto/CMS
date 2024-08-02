@@ -35,7 +35,7 @@ public class Fellowship {
 	@DecimalMin(value="0.0", inclusive=false, message = "Fellowship value must be greater than 0")
 	@NotNull
 	private BigDecimal monthlyValue;
-	@OneToMany(mappedBy = "fellowship")
+	@OneToMany(mappedBy = "fellowship", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Enrollment> enrollments = new ArrayList<>();
 
 	public Fellowship(String name, String description, LocalDate startDate, LocalDate endDate, BigDecimal monthlyValue) {
