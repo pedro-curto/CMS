@@ -48,4 +48,30 @@ public class FellowshipController {
         }
     }
 
+    @PostMapping("/{fellowshipId}/enroll")
+    public ResponseEntity<Void> enrollCandidate(@PathVariable Long fellowshipId, @RequestParam String candidateId) {
+        System.out.println("Type of fellowshipId: " + fellowshipId.getClass());
+        try {
+            fellowshipService.enrollCandidate(fellowshipId, candidateId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/{fellowshipId}/unenroll")
+    public ResponseEntity<Void> unenrollCandidate(@PathVariable Long fellowshipId, @RequestParam String candidateId) {
+        System.out.println("Type of fellowshipId: " + fellowshipId.getClass());
+        try {
+            fellowshipService.unenrollCandidate(fellowshipId, candidateId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

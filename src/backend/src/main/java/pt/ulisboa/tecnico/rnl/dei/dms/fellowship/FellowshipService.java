@@ -64,5 +64,28 @@ public class FellowshipService {
         }
         fellowshipRepository.deleteById(id);
     }
+
+    public void enrollCandidate(Long fellowshipId, String candidateId) {
+        Fellowship fellowship = fellowshipRepository.findById(fellowshipId)
+                .orElseThrow(() -> new IllegalArgumentException("Fellowship not found"));
+        Candidate candidate = candidateRepository.findByIstId(candidateId)
+                .orElseThrow(() -> new IllegalArgumentException("Candidate not found"));
+        System.out.println("Enrolling candidate " + candidateId + " in fellowship " + fellowshipId);
+        fellowship.addCandidate(candidate);
+        candidate.addFellowship(fellowship);
+        fellowshipRepository.save(fellowship);
+        candidateRepository.save(candidate);
+    }
+
+    public void unenrollCandidate(Long fellowshipId, String candidateId) {
+        Fellowship fellowship = fellowshipRepository.findById(fellowshipId)
+                .orElseThrow(() -> new IllegalArgumentException("Fellowship not found"));
+        Candidate candidate = candidateRepository.findByIstId(candidateId)
+                .orElseThrow(() -> new IllegalArgumentException("Candidate not found"));
+        fellowship.removeCandidate(candidate);
+        candidate.removeFellowship(fellowship);
+        fellowshipRepository.save(fellowship);
+        candidateRepository.save(candidate);
+    }
     
 }

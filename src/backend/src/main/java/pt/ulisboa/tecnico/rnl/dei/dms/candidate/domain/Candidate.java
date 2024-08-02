@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.rnl.dei.dms.candidate.domain;
 
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidate.dto.CandidateDto;
+import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain.Fellowship;
 
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ public class Candidate {
 	private String istId;
 	private String name;
 	private String email;
+	@OneToMany(mappedBy = "candidate")
+	private List<Enrollment> enrollments = new ArrayList<>();
 	@ManyToMany(mappedBy = "candidates")
 	private List<Fellowship> fellowships = new ArrayList<>();
 
@@ -48,6 +51,12 @@ public class Candidate {
 		return email;
 	}
 
+	public List<Enrollment> getEnrollments() { return enrollments; }
+
+	public List<Fellowship> getFellowships() { return fellowships; }
+
+	public void setId(Long id) { this.id = id; }
+
 	public void setIstId(String istId) {
 		this.istId = istId;
 	}
@@ -60,5 +69,14 @@ public class Candidate {
 		this.email = email;
 	}
 
+	public void setFellowships(List<Fellowship> fellowships) { this.fellowships = fellowships; }
+
+	public void addFellowship(Fellowship fellowship) {
+		this.fellowships.add(fellowship);
+	}
+
+	public void removeFellowship(Fellowship fellowship) {
+		this.fellowships.remove(fellowship);
+	}
 
 }
