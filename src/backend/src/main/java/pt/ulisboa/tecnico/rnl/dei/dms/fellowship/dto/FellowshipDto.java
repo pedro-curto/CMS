@@ -1,13 +1,9 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto;
 
-import pt.ulisboa.tecnico.rnl.dei.dms.candidate.domain.Candidate;
-import pt.ulisboa.tecnico.rnl.dei.dms.candidate.dto.CandidateDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain.Fellowship;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FellowshipDto {
 	private Long id;
@@ -16,7 +12,6 @@ public class FellowshipDto {
 	private LocalDate startDate;
 	private LocalDate endDate;
 	private BigDecimal monthlyValue;
-	private List<CandidateDto> candidates;
 
 	public FellowshipDto() {}
 
@@ -35,10 +30,6 @@ public class FellowshipDto {
 		this.startDate = fellowship.getStartDate();
 		this.endDate = fellowship.getEndDate();
 		this.monthlyValue = fellowship.getMonthlyValue();
-		this.candidates = new ArrayList<>();
-		for (Candidate candidate : fellowship.getCandidates()) {
-			this.candidates.add(new CandidateDto(candidate));
-		}
 	}
 
 	public Long getId() {
@@ -65,10 +56,6 @@ public class FellowshipDto {
 		return monthlyValue;
 	}
 
-	public List<CandidateDto> getCandidates() {
-		return candidates;
-	}
-
 	public void setId(Long id) { this.id = id; }
 
 	public void setName(String name) {
@@ -91,14 +78,9 @@ public class FellowshipDto {
 		this.monthlyValue = monthlyValue;
 	}
 
-	public void setCandidates(List<CandidateDto> candidates) {
-		this.candidates = candidates;
-	}
-
 	@Override
 	public String toString() {
-		return "FellowshipDto {id=" + id + ", name=" + name + ", description=" + description + ", startDate=" + startDate + ", endDate=" + endDate + ", monthlyValue=" + monthlyValue +
-				", candidates=" + candidates + "}";
+		return "FellowshipDto {id=" + id + ", name=" + name + ", description=" + description + ", startDate=" + startDate + ", endDate=" + endDate + ", monthlyValue=" + monthlyValue + "}";
 	}
 
 }

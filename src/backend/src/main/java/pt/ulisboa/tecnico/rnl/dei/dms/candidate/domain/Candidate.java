@@ -2,8 +2,7 @@ package pt.ulisboa.tecnico.rnl.dei.dms.candidate.domain;
 
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidate.dto.CandidateDto;
-import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.Enrollment;
-import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain.Fellowship;
+import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain.Enrollment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +19,6 @@ public class Candidate {
 	private String email;
 	@OneToMany(mappedBy = "candidate")
 	private List<Enrollment> enrollments = new ArrayList<>();
-	@ManyToMany(mappedBy = "candidates")
-	private List<Fellowship> fellowships = new ArrayList<>();
 
 	public Candidate() {}
 
@@ -53,8 +50,6 @@ public class Candidate {
 
 	public List<Enrollment> getEnrollments() { return enrollments; }
 
-	public List<Fellowship> getFellowships() { return fellowships; }
-
 	public void setId(Long id) { this.id = id; }
 
 	public void setIstId(String istId) {
@@ -69,14 +64,14 @@ public class Candidate {
 		this.email = email;
 	}
 
-	public void setFellowships(List<Fellowship> fellowships) { this.fellowships = fellowships; }
+	public void setEnrollments(List<Enrollment> enrollments) { this.enrollments = enrollments; }
 
-	public void addFellowship(Fellowship fellowship) {
-		this.fellowships.add(fellowship);
+	public void addEnrollment(Enrollment enrollment) {
+		this.enrollments.add(enrollment);
 	}
 
-	public void removeFellowship(Fellowship fellowship) {
-		this.fellowships.remove(fellowship);
+	public void removeEnrollment(Enrollment enrollment) {
+		this.enrollments.remove(enrollment);
 	}
 
 }

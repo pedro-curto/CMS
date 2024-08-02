@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidate.domain.Candidate;
+import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto.FellowshipDto;
 
 import java.math.BigDecimal;
@@ -31,8 +32,8 @@ public class Fellowship {
 	@DecimalMin(value="0.0", inclusive=false, message = "Fellowship value must be greater than 0")
 	@NotNull
 	private BigDecimal monthlyValue;
-	@ManyToMany
-	private List<Candidate> candidates = new ArrayList<>();
+	@OneToMany(mappedBy = "fellowship")
+	private List<Enrollment> enrollments = new ArrayList<>();
 
 	public Fellowship() {}
 
@@ -72,9 +73,7 @@ public class Fellowship {
 		return monthlyValue;
 	}
 
-	public List<Candidate> getCandidates() {
-		return candidates;
-	}
+	public List<Enrollment> getEnrollments() { return enrollments; }
 
 	public void setName(String name) { this.name = name; }
 	
@@ -96,12 +95,14 @@ public class Fellowship {
 		this.id = id;
 	}
 
-	public void addCandidate(Candidate candidate) {
-		candidates.add(candidate);
+	public void setEnrollments(List<Enrollment> enrollments) { this.enrollments = enrollments; }
+
+	public void addEnrollment(Enrollment enrollment) {
+		enrollments.add(enrollment);
 	}
 
-	public void removeCandidate(Candidate candidate) {
-		candidates.remove(candidate);
+	public void removeEnrollment(Enrollment enrollment) {
+		enrollments.remove(enrollment);
 	}
 
 }
