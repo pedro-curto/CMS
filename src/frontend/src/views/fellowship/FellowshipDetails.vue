@@ -45,10 +45,18 @@
       </v-col>
     </v-row>
 
-    <!-- Candidates Section -->
+    <!-- Enrolled Candidates Section -->
     <v-row>
-      <!-- Check if fellowship is available and has candidates -->
-      <v-col v-if="fellowship && fellowship.candidates && fellowship.candidates.length" v-for="candidate in fellowship.candidates" :key="candidate.id" cols="12" sm="6" md="4">
+      <v-col v-if="enrolledCandidates.length">
+        <h1 class="text-center">Enrolled Candidates</h1>
+      </v-col>
+      <v-col v-else>
+        <h1 class="text-center">No candidates enrolled yet</h1>
+      </v-col>
+
+    </v-row>
+    <v-row>
+      <v-col v-if="!loading" v-for="candidate in enrolledCandidates" :key="candidate.id" cols="12" sm="6" md="4">
         <v-card class="candidate-card" outlined>
           <v-card-title>
             <v-avatar size="56" class="mr-3">
@@ -62,31 +70,33 @@
           </v-card-text>
         </v-card>
       </v-col>
-
-      <!-- Fallback message if no candidates -->
-      <v-col v-else>
-        <v-card class="pa-4" outlined>
-          <v-card-title>No candidates available</v-card-title>
-        </v-card>
-      </v-col>
     </v-row>
     <v-card-actions>
       <v-btn color="primary" @click="goBack">Back</v-btn>
+      <v-btn color="secondary" @click="goToCandidatesPage">Manage All Candidates</v-btn>
     </v-card-actions>
   </v-container>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import RemoteService from '@/services/RemoteService'
 import type FellowshipDto from '@/models/fellowship/FellowshipDto'
+import type CandidateDto from "@/models/candidate/CandidateDto";
 
 const route = useRoute()
 const router = useRouter()
 const fellowship = ref<FellowshipDto | null>(null)
+const allCandidates = ref<CandidateDto[]>([])
 const loading = ref(true)
 const error = ref<string | null>(null)
+
+onMounted(() => {
+  const fellowshipId = route.params.id as string
+  fetchFellowship(fellowshipId)
+  fetchAllCandidates()
+})
 
 async function fetchFellowship(id: string) {
   try {
@@ -99,14 +109,29 @@ async function fetchFellowship(id: string) {
   }
 }
 
+async function fetchAllCandidates() {
+  try {
+    allCandidates.value = await RemoteService.getCandidates()
+  } catch (err) {
+    error.value = 'Failed to fetch candidates.'
+    console.error(err)
+  }
+}
+
+// Filter enrolled candidates
+const enrolledCandidates = computed(() => {
+  return allCandidates.value.filter(candidate =>
+      fellowship.value?.candidates.some(c => c.istId === candidate.istId)
+  )
+})
+
 function goBack() {
   router.back()
 }
 
-onMounted(() => {
-  const fellowshipId = route.params.id as string
-  fetchFellowship(fellowshipId)
-})
+function goToCandidatesPage() {
+  router.push({ name: 'fellowshipCandidates' })
+}
 
 function getAvatarUrl(candidateId: string | undefined): string {
   const baseUrl = 'https://ui-avatars.com/api/';

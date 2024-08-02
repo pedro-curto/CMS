@@ -4,6 +4,7 @@ import MaterialView from '@/views/materials/MaterialView.vue'
 import CandidateView from '@/views/candidate/CandidateView.vue'
 import FellowshipView from '@/views/fellowship/FellowshipView.vue'
 import FellowshipDetails from '@/views/fellowship/FellowshipDetails.vue'
+import FellowshipCandidates from '@/views/fellowship/FellowshipCandidatesManagement.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -43,6 +44,12 @@ const router = createRouter({
       name: 'fellowshipDetails',
       component: FellowshipDetails,
       props: true,
+    },
+    {
+      path: '/fellowship/:id/candidateManagement',
+      name: 'fellowshipCandidates',
+      component: FellowshipCandidates,
+      props: true
     },
     {
       path: '/register',
