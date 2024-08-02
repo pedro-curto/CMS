@@ -57,11 +57,6 @@ public class EnrollmentController {
 		}
 	}
 
-	@GetMapping("/fellowships/{fellowshipId}")
-	public ResponseEntity<List<EnrollmentDto>> getEnrollmentsByFellowship(@PathVariable Long fellowshipId) {
-		return ResponseEntity.ok(enrollmentService.getEnrollmentsByFellowship(fellowshipId));
-	}
-
 	@GetMapping("/fellowships/{fellowshipId}/candidates")
 	public ResponseEntity<List<CandidateDto>> getEnrolledCandidatesByFellowship(@PathVariable Long fellowshipId) {
 		try {
