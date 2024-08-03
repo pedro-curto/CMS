@@ -201,4 +201,10 @@ export default class RemoteService {
     })
   }
 
+  static async getFellowshipWinner(fellowshipId: number): Promise<CandidateDto> {
+    return httpClient.get(`/evaluations/getWinner/${fellowshipId}`).then((response) => {
+      return new CandidateDto(response.data)
+    })
+  }
+
 }

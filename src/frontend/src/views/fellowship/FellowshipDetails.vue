@@ -85,7 +85,46 @@
       <v-col>
         <v-card class="pa-6" outlined>
           <v-card-text>
-            <v-btn color="primary" @click="openWeightsDialog">Change Evaluation Weights</v-btn>
+            <v-row justify="center">
+              <v-col cols="auto">
+                <v-btn color="primary" @click="openWeightsDialog">Change Evaluation Weights</v-btn>
+              </v-col>
+              <v-col cols="auto">
+                <v-btn color="primary" @click="selectFellowshipWinner">Select Fellowship Winner</v-btn>
+              </v-col>
+            </v-row>
+
+            <!-- Winner Dialog -->
+            <v-dialog v-model="winnerDialog" max-width="600">
+              <v-card>
+                <v-card-title class="headline text-center">
+                  <v-icon justify="center" class="mr-2">mdi-trophy</v-icon>
+                  Fellowship Winner
+                </v-card-title>
+                <v-divider></v-divider>
+                <v-card-text>
+                  <v-row align="center" justify="center">
+                    <v-col cols="auto">
+                      <v-avatar size="100" class="mb-3">
+                        <v-img :src="getAvatarUrl(fellowshipWinner?.id)" alt="Profile picture"></v-img>
+                      </v-avatar>
+                    </v-col>
+                  </v-row>
+                  <v-row align="center" justify="center">
+                    <v-col cols="auto" class="text-center">
+                      <div class="text-h5">{{ fellowshipWinner?.name }}</div>
+                      <div class="text-subtitle-1">{{ fellowshipWinner?.istId }}</div>
+                      <div class="text-body-1">{{ fellowshipWinner?.email }}</div>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" @click="closeWinnerDialog">Close</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
           </v-card-text>
         </v-card>
       </v-col>
@@ -113,7 +152,9 @@ const route = useRoute()
 const router = useRouter()
 const fellowship = ref<FellowshipDto | null>(null)
 const enrolledCandidates = ref<CandidateDto[]>([])
+const fellowshipWinner = ref<CandidateDto | null>(null)
 const weightsDialog = ref(false)
+const winnerDialog = ref(false)
 const loading = ref(true)
 const error = ref<string | null>(null)
 const evaluationWeights = ref<{ [key: string]: number }>({})
@@ -173,6 +214,21 @@ function closeWeightsDialog() {
   weightsDialog.value = false
 }
 
+async function selectFellowshipWinner() {
+  try {
+    fellowshipWinner.value = await RemoteService.getFellowshipWinner(fellowship.value.id)
+    winnerDialog.value = true
+  } catch (err) {
+    error.value = 'Failed to fetch evaluation weights.'
+    console.error(err)
+    alert('Failed to select fellowship winner. Not all candidates may have been evaluated.')
+  }
+}
+
+function closeWinnerDialog() {
+  winnerDialog.value = false
+}
+
 function getAvatarUrl(candidateId: string | undefined): string {
   const baseUrl = 'https://ui-avatars.com/api/';
   const defaultText = 'Unknown';
@@ -188,8 +244,5 @@ function getAvatarUrl(candidateId: string | undefined): string {
 .candidate-card {
   cursor: pointer;
   transition: box-shadow 0.3s ease;
-}
-.candidate-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 </style>
