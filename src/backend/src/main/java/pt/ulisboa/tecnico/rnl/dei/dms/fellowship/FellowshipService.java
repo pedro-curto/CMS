@@ -8,6 +8,7 @@ import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto.FellowshipDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.repository.FellowshipRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,5 +58,13 @@ public class FellowshipService {
         }
         fellowshipRepository.deleteById(id);
     }
-    
+
+    @Transactional
+    public FellowshipDto updateFellowshipWeights(Long id, Map<String, Double> weights) {
+        Fellowship fellowship = fellowshipRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Fellowship not found"));
+        fellowship.updateWeights(weights);
+        fellowshipRepository.save(fellowship);
+        return new FellowshipDto(fellowship);
+    }
 }

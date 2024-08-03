@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto.FellowshipDto;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/fellowships")
@@ -41,6 +42,18 @@ public class FellowshipController {
         try {
             fellowshipService.deleteFellowship(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/updateWeights/{id}")
+    public ResponseEntity<FellowshipDto> updateFellowshipWeights(@PathVariable Long id, @RequestBody Map<String, Double> weights) {
+        try {
+            FellowshipDto updatedFellowship = fellowshipService.updateFellowshipWeights(id, weights);
+            return new ResponseEntity<>(updatedFellowship, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {

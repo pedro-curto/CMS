@@ -87,4 +87,10 @@ public class Fellowship {
 		}
 	}
 
+	public void updateWeights(Map<String, Double> weights) {
+		weights.forEach((category, weight) -> {
+			EvaluationCategory evaluationCategory = EvaluationCategory.valueOf(category);
+			updateWeight(evaluationCategory, weight);
+		});
+	}
 }
