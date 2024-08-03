@@ -86,6 +86,12 @@ public class EnrollmentController {
 		return ResponseEntity.ok(enrollmentService.getEnrollments());
 	}
 
+	@GetMapping("/getId")
+	public ResponseEntity<Long> getEnrollmentId(@RequestParam Long fellowshipId, @RequestParam Long candidateId) {
+		System.out.println("FellowshipId: " + fellowshipId + " CandidateId: " + candidateId);
+		return ResponseEntity.ok(enrollmentService.getEnrollmentId(fellowshipId, candidateId));
+	}
+
 	@GetMapping("/fellowships/{fellowshipId}")
 	public ResponseEntity<List<EnrollmentDto>> getFellowshipEnrollments(@PathVariable Long fellowshipId) {
 		return ResponseEntity.ok(enrollmentService.getFellowshipEnrollments(fellowshipId));

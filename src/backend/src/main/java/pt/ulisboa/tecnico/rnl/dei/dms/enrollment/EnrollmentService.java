@@ -103,4 +103,11 @@ public class EnrollmentService {
 				.map(EnrollmentDto::new)
 				.collect(Collectors.toList());
 	}
+
+	@Transactional
+	public Long getEnrollmentId(Long fellowshipId, Long candidateId) {
+		Enrollment enrollment = enrollmentRepository.getEnrollmentByFellowshipIdAndCandidateId(fellowshipId, candidateId);
+		System.out.println("EnrollmentId: " + enrollment.getId());
+		return enrollment.getId();
+	}
 }
