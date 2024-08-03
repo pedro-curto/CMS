@@ -16,13 +16,11 @@ public class EvaluationDto {
 	private Long id;
 	private Long enrollmentId;
 	private Map<EvaluationCategory, Double> scores = new EnumMap<>(EvaluationCategory.class);
-	//private Map<EvaluationCategory, Double> weights = new EnumMap<>(EvaluationCategory.class);
 
 	public EvaluationDto(Evaluation evaluation) {
 		this.id = evaluation.getId();
 		this.enrollmentId = evaluation.getEnrollment().getId();
 		this.scores = evaluation.getScores();
-		//this.weights = evaluation.getWeights();
 	}
 
 }

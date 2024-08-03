@@ -40,9 +40,11 @@ public class EvaluationService {
 
 	@Transactional
 	public Double getCandidateFinalEvaluation(Long enrollmentId) {
+		if (!evaluationRepository.existsByEnrollmentId(enrollmentId)) {
+			throw new IllegalArgumentException("Evaluation not found");
+		}
 		Evaluation evaluation = evaluationRepository.getEvaluationByEnrollmentId(enrollmentId);
-		return 2.0;
-		//return evaluation.calculateFinalScore();
+		return evaluation.calculateFinalScore();
 	}
 
 	@Transactional

@@ -28,13 +28,10 @@
 		private Enrollment enrollment;
 		@ElementCollection
 		private Map<EvaluationCategory, Double> scores = new EnumMap<>(EvaluationCategory.class);
-		//@ElementCollection
-		//private Map<EvaluationCategory, Double> weights = new EnumMap<>(EvaluationCategory.class);
 
 		public Evaluation(Enrollment enrollment, EvaluationDto evaluationDto) {
 			setEnrollment(enrollment);
 			this.scores = evaluationDto.getScores();
-			//this.weights = evaluationDto.getWeights();
 		}
 
 		public void setEnrollment(Enrollment enrollment) {
@@ -42,12 +39,14 @@
 			this.enrollment.addEvaluation(this);
 		}
 
-		//public Double calculateFinalScore() {
-		//	double finalScore = 0;
-		//	for (EvaluationCategory category : scores.keySet()) {
-		//		finalScore += scores.get(category) * weights.get(category);
-		//	}
-		//	return finalScore;
-		//}
+		public Double calculateFinalScore() {
+			// gets weights from the fellowship
+			Map<EvaluationCategory, Double> weights = enrollment.getFellowship().getWeights();
+			double finalScore = 0;
+			for (EvaluationCategory category : scores.keySet()) {
+				finalScore += scores.get(category) * weights.get(category);
+			}
+			return finalScore;
+		}
 
 	}
