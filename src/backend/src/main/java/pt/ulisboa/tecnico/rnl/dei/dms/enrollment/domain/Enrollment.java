@@ -8,8 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidate.domain.Candidate;
-import pt.ulisboa.tecnico.rnl.dei.dms.candidate.dto.CandidateDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.dto.EnrollmentDto;
+import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.domain.Evaluation;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain.Fellowship;
 
 @Entity
@@ -34,6 +34,9 @@ public class Enrollment {
 	@JoinColumn(name = "candidate_id")
 	@NotNull
 	private Candidate candidate;
+	// when an enrollment is removed, the related evaluation is also removed
+	@OneToOne(mappedBy = "enrollment", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Evaluation evaluation;
 
 	public Enrollment(Fellowship fellowship, Candidate candidate, EnrollmentDto enrollmentDto) {
 		setFellowship(fellowship);
@@ -59,4 +62,5 @@ public class Enrollment {
 		this.candidate.addEnrollment(this);
 	}
 
+	public void addEvaluation(Evaluation evaluation) { this.evaluation = evaluation; }
 }
