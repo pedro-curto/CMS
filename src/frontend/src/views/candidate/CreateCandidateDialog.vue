@@ -16,21 +16,26 @@
       </v-card-title>
 
       <v-card-text>
-        <v-text-field
-            v-model="newCandidate.istId"
-            label="IstID"
-            required
-        ></v-text-field>
-        <v-text-field
-          v-model="newCandidate.name"
-          label="Name"
-          required
-        ></v-text-field>
-        <v-text-field
-          v-model="newCandidate.email"
-          label="Email"
-          required
-        ></v-text-field>
+        <v-form ref="form" v-model="valid" lazy-validation>
+          <v-text-field
+              v-model="newCandidate.istId"
+              label="IstID"
+              :rules="istIdRules"
+              required
+          ></v-text-field>
+          <v-text-field
+              v-model="newCandidate.name"
+              label="Name"
+              :rules="nameRules"
+              required
+          ></v-text-field>
+          <v-text-field
+              v-model="newCandidate.email"
+              label="Email"
+              :rules="emailRules"
+              required
+          ></v-text-field>
+        </v-form>
       </v-card-text>
 
       <v-divider></v-divider>
@@ -41,13 +46,11 @@
         <v-btn text="Close" variant="plain" @click="dialog = false"></v-btn>
 
         <v-btn
-          color="primary"
-          text="Save"
-          variant="tonal"
-          @click="
-            dialog = false;
-            saveCandidate()
-          "
+            color="primary"
+            text="Save"
+            variant="tonal"
+            :disabled="!valid"
+            @click="submitForm"
         ></v-btn>
       </v-card-actions>
     </v-card>
@@ -55,23 +58,41 @@
 </template>
 
 <script setup lang="ts">
-import {ref, reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import RemoteService from '@/services/RemoteService'
-import type CandidateDto from '@/models/candidate/CandidateDto';
-import type MaterialDto from "@/models/materials/MaterialDto";
+import type CandidateDto from '@/models/candidate/CandidateDto'
 
-const dialog = ref(false);
+const dialog = ref(false)
+const valid = ref(false)
+const form = ref(null)
 const emit = defineEmits(['candidate-created'])
 
 const newCandidate = reactive<CandidateDto>({
+  istId: '',
   name: '',
   email: ''
 })
 
+const istIdRules = [
+  (v: string) => !!v || 'IstID is required',
+  (v: string) => v.length > 0 || 'IstID must not be blank'
+]
 
-const saveCandidate = async () => {
-  await RemoteService.addCandidate(newCandidate)
-  dialog.value = false
-  emit('candidate-created')
+const nameRules = [
+  (v: string) => !!v || 'Name is required',
+  (v: string) => v.length > 0 || 'Name must not be blank'
+]
+
+const emailRules = [
+  (v: string) => !!v || 'Email is required',
+  (v: string) => /.+@.+\..+/.test(v) || 'Email must be valid'
+]
+
+const submitForm = async () => {
+  if (form.value && form.value.validate()) {
+    await RemoteService.addCandidate(newCandidate)
+    dialog.value = false
+    emit('candidate-created')
+  }
 }
 </script>
