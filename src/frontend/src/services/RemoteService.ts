@@ -195,4 +195,10 @@ export default class RemoteService {
     })
   }
 
+  static async getCandidateFinalEvaluation(enrollmentId: number): Promise<Double> {
+    return httpClient.get(`/evaluations/getFinalEvaluation/${enrollmentId}`).then((response) => {
+        return response.data
+    })
+  }
+
 }

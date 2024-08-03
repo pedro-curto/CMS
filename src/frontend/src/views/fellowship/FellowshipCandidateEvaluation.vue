@@ -11,7 +11,7 @@
           <v-card-title class="headline">Evaluation for Candidate {{ candidateId }}</v-card-title>
           <v-card-text>
             <div v-for="(score, index) in evaluation.scores" :key="index">
-              <p>Category {{ index }}: {{ score }}</p>
+              <p>{{ index }}: {{ formatNumber(score) }}</p>
             </div>
           </v-card-text>
         </v-card>
@@ -35,19 +35,19 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-card-actions>
-      <v-btn color="primary" @click="goBack">Back</v-btn>
-    </v-card-actions>
     <v-row v-if="evaluation">
       <v-col>
         <v-card class="pa-6" outlined>
           <v-card-title class="headline">Evaluation Result </v-card-title>
           <v-card-text>
-              <p>{{ evaluation.scores }} </p>
+              <p>{{ formatNumber(finalResult) }} </p>
           </v-card-text>
         </v-card>
       </v-col>
     </v-row>
+    <v-card-actions>
+      <v-btn color="primary" @click="goBack">Back</v-btn>
+    </v-card-actions>
   </v-container>
 </template>
 
@@ -63,6 +63,7 @@ const candidateId = Number(route.params.candidateId)
 const fellowshipId = Number(route.params.id)
 const enrollmentId = ref<number | null>(null)
 const evaluation = ref<EvaluationDto | null>(null)
+const finalResult = ref<number | null>(null)
 const evaluationCategories = ref<string[]>([])
 const newEvaluation = ref<EvaluationDto>({
   enrollmentId: null,
@@ -75,6 +76,8 @@ onMounted(async () => {
     // tries to fetch evaluation details -- if it fails, presents form to create new evaluation
     try {
       evaluation.value = await RemoteService.getEvaluationDetails(enrollmentId.value)
+      finalResult.value = await RemoteService.getCandidateFinalEvaluation(enrollmentId.value)
+      console.log("evaluation", evaluation.value)
     } catch (err) {
       console.error('Failed to fetch evaluation details:', err)
       newEvaluation.value.enrollmentId = enrollmentId.value
@@ -93,6 +96,11 @@ async function submitEvaluation() {
     console.error('Failed to submit evaluation:', err)
   }
 }
+
+function formatNumber(value: number | null): string {
+  return value !== null ? value.toFixed(2) : 'N/A'
+}
+
 
 function goBack() {
   router.back()
