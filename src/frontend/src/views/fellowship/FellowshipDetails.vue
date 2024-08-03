@@ -68,6 +68,12 @@
           <v-card-text>
             <v-chip color="primary" text-color="white">{{ candidate.email }}</v-chip>
           </v-card-text>
+          <v-card-actions>
+            <v-btn
+                  color="primary"
+                 @click="goToEvaluationPage(candidate.id)">View Evaluation
+            </v-btn>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
@@ -75,6 +81,18 @@
       <v-btn color="primary" @click="goBack">Back</v-btn>
       <v-btn color="secondary" @click="goToCandidatesPage">Manage All Candidates</v-btn>
     </v-card-actions>
+    <v-row v-if="evaluationWeights">
+      <v-col>
+        <v-card class="pa-6" outlined>
+          <v-card-title class="headline">Evaluation Weights</v-card-title>
+          <v-card-text>
+            <div v-for="(weight, category) in evaluationWeights" :key="category">
+              <p>{{ category }}: {{ weight }}</p>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -91,11 +109,13 @@ const fellowship = ref<FellowshipDto | null>(null)
 const enrolledCandidates = ref<CandidateDto[]>([])
 const loading = ref(true)
 const error = ref<string | null>(null)
+const evaluationWeights = ref<{ [key: string]: number }>({})
 
 onMounted(() => {
   const fellowshipId = Number(route.params.id)
   fetchFellowship(fellowshipId)
   fetchEnrolledCandidates(fellowshipId)
+  fetchEvaluationWeights(fellowshipId)
 })
 
 async function fetchFellowship(id: number) {
@@ -118,12 +138,25 @@ async function fetchEnrolledCandidates(fellowshipId: number) {
   }
 }
 
+async function fetchEvaluationWeights(fellowshipId: number) {
+  try {
+    evaluationWeights.value = await RemoteService.getEvaluationWeights(fellowshipId)
+  } catch (err) {
+    error.value = 'Failed to fetch evaluation weights.'
+    console.error(err)
+  }
+}
+
 function goBack() {
   router.back()
 }
 
 function goToCandidatesPage() {
   router.push({ name: 'fellowshipCandidates' })
+}
+
+function goToEvaluationPage(candidateId: number) {
+  router.push({ name: 'candidateEvaluation', params: { candidateId } })
 }
 
 function getAvatarUrl(candidateId: string | undefined): string {

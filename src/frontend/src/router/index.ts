@@ -6,6 +6,7 @@ import CandidateDetailsView from '@/views/candidate/CandidateDetailsView.vue'
 import FellowshipView from '@/views/fellowship/FellowshipView.vue'
 import FellowshipDetails from '@/views/fellowship/FellowshipDetails.vue'
 import FellowshipCandidates from '@/views/fellowship/FellowshipCandidatesManagement.vue'
+import CandidateEvaluation from '@/views/fellowship/FellowshipCandidateEvaluation.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,6 +51,12 @@ const router = createRouter({
       name: 'fellowshipDetails',
       component: FellowshipDetails,
       props: true,
+    },
+    {
+      path:'/fellowship/:id/:candidateId/evaluation',
+      name: 'candidateEvaluation',
+      component: CandidateEvaluation,
+        props: true
     },
     {
       path: '/fellowship/:id/candidateManagement',

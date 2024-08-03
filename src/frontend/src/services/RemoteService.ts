@@ -4,6 +4,7 @@ import MaterialDto from '@/models/materials/MaterialDto'
 import CandidateDto from '@/models/candidate/CandidateDto';
 import FellowshipDto from '@/models/fellowship/FellowshipDto';
 import EnrollmentDto from "@/models/enrollment/EnrollmentDto";
+import EvaluationDto from '@/models/evaluation/EvaluationDto';
 
 const httpClient = axios.create()
 httpClient.defaults.timeout = 10000
@@ -150,5 +151,41 @@ export default class RemoteService {
         return new EnrollmentDto(enrollment)
       })
     })
+  }EnrollmentDto
+
+  static async getEnrollmentId(fellowshipId: number, candidateId: number): Promise<number> {
+    console.log(fellowshipId, candidateId)
+    return httpClient.get(`/enrollments/getId`,
+        { params: { fellowshipId, candidateId}})
+        .then((response) => {
+          return response.data
+        })
   }
+
+    // ------------------- Evaluations -------------------
+
+  static async createEvaluation(evaluation: EvaluationDto): Promise<EvaluationDto> {
+    return httpClient.post('/evaluations/create', evaluation).then((response) => {
+      return new EvaluationDto(response.data)
+    })
+  }
+
+  static async getEvaluationDetails(enrollmentId: number): Promise<EvaluationDto> {
+    return httpClient.get(`/evaluations/getDetails/${enrollmentId}`).then((response) => {
+      return new EvaluationDto(response.data)
+    })
+  }
+
+  static async getEvaluationCategories(): Promise<string[]> {
+    return httpClient.get('/evaluations/getCategories').then((response) => {
+      return response.data
+    })
+  }
+
+  static async getEvaluationWeights(fellowshipId: number): Promise<number[]> {
+    return httpClient.get(`/evaluations/getWeights/${fellowshipId}`).then((response) => {
+      return response.data
+    })
+  }
+
 }
