@@ -8,12 +8,15 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain.Enrollment;
+import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.domain.EvaluationCategory;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto.FellowshipDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "fellowship")
@@ -37,6 +40,8 @@ public class Fellowship {
 	private BigDecimal monthlyValue;
 	@OneToMany(mappedBy = "fellowship", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Enrollment> enrollments = new ArrayList<>();
+	@ElementCollection
+	private Map<EvaluationCategory, Double> weights = new EnumMap<>(EvaluationCategory.class);
 
 	public Fellowship(String name, String description, LocalDate startDate, LocalDate endDate, BigDecimal monthlyValue) {
 		this.name = name;
@@ -44,6 +49,8 @@ public class Fellowship {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.monthlyValue = monthlyValue;
+		// if weights are provided, use them; else, use default weights
+		this.weights = initializeDefaultWeights();
 	}
 
 	public Fellowship(FellowshipDto fellowshipDto) {
@@ -52,6 +59,8 @@ public class Fellowship {
 		this.startDate = fellowshipDto.getStartDate();
 		this.endDate = fellowshipDto.getEndDate();
 		this.monthlyValue = fellowshipDto.getMonthlyValue();
+		this.weights = fellowshipDto.getWeights() != null ? fellowshipDto.getWeights()
+				: initializeDefaultWeights();
 	}
 
 	public void addEnrollment(Enrollment enrollment) {
@@ -60,6 +69,22 @@ public class Fellowship {
 
 	public void removeEnrollment(Enrollment enrollment) {
 		enrollments.remove(enrollment);
+	}
+
+	private Map<EvaluationCategory, Double> initializeDefaultWeights() {
+		Map<EvaluationCategory, Double> defaultWeights = new EnumMap<>(EvaluationCategory.class);
+		defaultWeights.put(EvaluationCategory.Curriculum, 0.5);
+		defaultWeights.put(EvaluationCategory.Interview, 0.3);
+		defaultWeights.put(EvaluationCategory.Exercise, 0.2);
+		return defaultWeights;
+	}
+
+	public void updateWeight(EvaluationCategory category, Double weight) {
+		if (weights.containsKey((category))) {
+			weights.put(category, weight);
+		} else {
+			throw new IllegalArgumentException("Category not found");
+		}
 	}
 
 }
