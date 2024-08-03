@@ -84,15 +84,20 @@
     <v-row v-if="evaluationWeights">
       <v-col>
         <v-card class="pa-6" outlined>
-          <v-card-title class="headline">Evaluation Weights</v-card-title>
           <v-card-text>
-            <div v-for="(weight, category) in evaluationWeights" :key="category">
-              <p>{{ category }}: {{ weight }}</p>
-            </div>
+            <v-btn color="primary" @click="openWeightsDialog">Change Evaluation Weights</v-btn>
           </v-card-text>
         </v-card>
       </v-col>
     </v-row>
+
+  <v-dialog v-model="weightsDialog" max-width="1000">
+    <EditWeightsDialog
+        v-if="fellowship"
+        :fellowshipId="fellowship.id"
+        @dialog-close="closeWeightsDialog"
+    />
+  </v-dialog>
   </v-container>
 </template>
 
@@ -102,11 +107,13 @@ import { useRoute, useRouter } from 'vue-router'
 import RemoteService from '@/services/RemoteService'
 import type FellowshipDto from '@/models/fellowship/FellowshipDto'
 import type CandidateDto from "@/models/candidate/CandidateDto";
+import EditWeightsDialog from '@/views/fellowship/EditWeightsDialog.vue'
 
 const route = useRoute()
 const router = useRouter()
 const fellowship = ref<FellowshipDto | null>(null)
 const enrolledCandidates = ref<CandidateDto[]>([])
+const weightsDialog = ref(false)
 const loading = ref(true)
 const error = ref<string | null>(null)
 const evaluationWeights = ref<{ [key: string]: number }>({})
@@ -157,6 +164,13 @@ function goToCandidatesPage() {
 
 function goToEvaluationPage(candidateId: number) {
   router.push({ name: 'candidateEvaluation', params: { candidateId } })
+}
+
+function openWeightsDialog() {
+  weightsDialog.value = true
+}
+function closeWeightsDialog() {
+  weightsDialog.value = false
 }
 
 function getAvatarUrl(candidateId: string | undefined): string {

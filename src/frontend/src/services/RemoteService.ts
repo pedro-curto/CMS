@@ -106,6 +106,12 @@ export default class RemoteService {
     })
   }
 
+  static async updateFellowshipWeights(fellowshipId: number, weights: { [key: string]: number }): Promise<void> {
+    return httpClient.put(`/fellowships/updateWeights/${fellowshipId}`, weights).then((response) => {
+      return response.data;
+    });
+  }
+
   // ------------------- Enrollments -------------------
 
   static async enrollCandidate(enrollmentDto: EnrollmentDto): Promise<EnrollmentDto> {
@@ -183,6 +189,7 @@ export default class RemoteService {
   }
 
   static async getEvaluationWeights(fellowshipId: number): Promise<number[]> {
+    console.log(fellowshipId)
     return httpClient.get(`/evaluations/getWeights/${fellowshipId}`).then((response) => {
       return response.data
     })
