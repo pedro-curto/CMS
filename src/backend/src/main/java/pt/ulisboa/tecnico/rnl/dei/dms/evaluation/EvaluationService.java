@@ -64,4 +64,7 @@ public class EvaluationService {
 		return fellowship.getWeights();
 	}
 
+	public List<EvaluationDto> getEvaluations() {
+		return evaluationRepository.findAll().stream().map(EvaluationDto::new).toList();
+	}
 }

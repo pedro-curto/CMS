@@ -76,4 +76,9 @@ public class EvaluationController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	@GetMapping("/getAll")
+	public List<EvaluationDto> getEvaluations() {
+		return evaluationService.getEvaluations();
+	}
 }
