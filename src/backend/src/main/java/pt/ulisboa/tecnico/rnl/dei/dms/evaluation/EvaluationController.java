@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pt.ulisboa.tecnico.rnl.dei.dms.candidate.dto.CandidateDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.domain.EvaluationCategory;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.dto.EvaluationDto;
 
@@ -81,4 +82,17 @@ public class EvaluationController {
 	public List<EvaluationDto> getEvaluations() {
 		return evaluationService.getEvaluations();
 	}
+
+	@GetMapping("/getWinner/{fellowshipId}")
+	public ResponseEntity<CandidateDto> getFellowshipWinner(@PathVariable Long fellowshipId) {
+		try {
+			CandidateDto result = evaluationService.getFellowshipWinner(fellowshipId);
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch (IllegalArgumentException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }
