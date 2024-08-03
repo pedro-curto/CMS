@@ -66,15 +66,20 @@ const evaluation = ref<EvaluationDto | null>(null)
 const evaluationCategories = ref<string[]>([])
 const newEvaluation = ref<EvaluationDto>({
   enrollmentId: null,
-  scores: [],
+  scores: {}
 })
 
 onMounted(async () => {
   try {
     enrollmentId.value = await RemoteService.getEnrollmentId(fellowshipId, candidateId)
-    evaluation.value = await RemoteService.getEvaluationDetails(enrollmentId.value)
-    newEvaluation.value.enrollmentId = enrollmentId.value
-    evaluationCategories.value = await RemoteService.getEvaluationCategories()
+    // tries to fetch evaluation details -- if it fails, presents form to create new evaluation
+    try {
+      evaluation.value = await RemoteService.getEvaluationDetails(enrollmentId.value)
+    } catch (err) {
+      console.error('Failed to fetch evaluation details:', err)
+      newEvaluation.value.enrollmentId = enrollmentId.value
+      evaluationCategories.value = await RemoteService.getEvaluationCategories()
+    }
   } catch (err) {
     console.error('Failed to fetch evaluation details:', err)
   }
@@ -83,7 +88,7 @@ onMounted(async () => {
 async function submitEvaluation() {
   try {
     await RemoteService.createEvaluation(newEvaluation.value)
-    evaluation.value = await RemoteService.getEvaluationDetails(enrollmentId)
+    evaluation.value = await RemoteService.getEvaluationDetails(enrollmentId.value)
   } catch (err) {
     console.error('Failed to submit evaluation:', err)
   }
