@@ -29,7 +29,7 @@ public class Candidate {
 	private String istId;
 	@NotBlank
 	private String name;
-	@NotNull
+	@NotBlank
 	@Email
 	private String email;
 	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)

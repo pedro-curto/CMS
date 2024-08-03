@@ -1,6 +1,8 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,9 +28,11 @@ public class Enrollment {
 	private String enrollmentDateTime;
 	@ManyToOne
 	@JoinColumn(name = "fellowship_id")
+	@NotNull
 	private Fellowship fellowship;
 	@ManyToOne
 	@JoinColumn(name = "candidate_id")
+	@NotNull
 	private Candidate candidate;
 
 	public Enrollment(Fellowship fellowship, Candidate candidate, EnrollmentDto enrollmentDto) {
