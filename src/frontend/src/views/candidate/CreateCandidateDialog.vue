@@ -43,7 +43,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
 
-        <v-btn text="Close" variant="plain" @click="dialog = false"></v-btn>
+        <v-btn text="Close" variant="plain" @click="closeDialog "></v-btn>
 
         <v-btn
             color="primary"
@@ -88,11 +88,26 @@ const emailRules = [
   (v: string) => /.+@.+\..+/.test(v) || 'Email must be valid'
 ]
 
+const resetForm = () => {
+  newCandidate.istId = ''
+  newCandidate.name = ''
+  newCandidate.email = ''
+  if (form.value) {
+    form.value.reset()
+  }
+}
+
+const closeDialog = () => {
+  dialog.value = false
+  resetForm()
+}
+
 const submitForm = async () => {
   if (form.value && form.value.validate()) {
     await RemoteService.addCandidate(newCandidate)
     dialog.value = false
     emit('candidate-created')
+    resetForm()
   }
 }
 </script>
