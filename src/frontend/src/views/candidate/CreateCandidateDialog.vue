@@ -10,11 +10,8 @@
       ></v-btn>
     </template>
 
-    <v-card>
-      <v-card-title>
-        <span class="headline">Create a new candidate</span>
-      </v-card-title>
-
+    <div class="pa-4 text-center">
+    <v-card prepend-icon="mdi-account-plus" title="Add a New Candidate">
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-text-field
@@ -54,6 +51,7 @@
         ></v-btn>
       </v-card-actions>
     </v-card>
+    </div>
   </v-dialog>
 </template>
 
