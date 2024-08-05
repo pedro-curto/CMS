@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.evaluation.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class EvaluationDto {
 	private Long id;
+	@NotNull(message = "Enrollment ID is required")
 	private Long enrollmentId;
 	private Map<EvaluationCategory, Double> scores = new EnumMap<>(EvaluationCategory.class);
 

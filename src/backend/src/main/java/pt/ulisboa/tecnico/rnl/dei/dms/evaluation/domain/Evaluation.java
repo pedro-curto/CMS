@@ -24,14 +24,17 @@
 		private Long id;
 		@OneToOne
 		@JoinColumn(name = "enrollment_id")
-		@NotNull
+		@NotNull(message = "Enrollment ID is required")
 		private Enrollment enrollment;
 		@ElementCollection
+		// its value must be between 0 and 20
 		private Map<EvaluationCategory, Double> scores = new EnumMap<>(EvaluationCategory.class);
 
 		public Evaluation(Enrollment enrollment, EvaluationDto evaluationDto) {
 			setEnrollment(enrollment);
 			this.scores = evaluationDto.getScores();
+			// checks if the scores are between 0 and 20
+			validateScores();
 		}
 
 		public void setEnrollment(Enrollment enrollment) {
@@ -44,9 +47,18 @@
 			Map<EvaluationCategory, Double> weights = enrollment.getFellowship().getWeights();
 			double finalScore = 0;
 			for (EvaluationCategory category : scores.keySet()) {
+				System.out.println("CATEGORY: " + category);
 				finalScore += scores.get(category) * weights.get(category);
 			}
 			return finalScore;
+		}
+
+		private void validateScores() {
+			for (EvaluationCategory category : scores.keySet()) {
+				if (scores.get(category) < 0 || scores.get(category) > 20) {
+					throw new IllegalArgumentException("Scores must be between 0 and 20");
+				}
+			}
 		}
 
 	}
