@@ -43,10 +43,7 @@ public class FellowshipService {
     public FellowshipDto updateFellowship(Long id, FellowshipDto fellowshipDto) {
         Fellowship fellowship = fellowshipRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Fellowship not found"));
-        fellowship.setName(fellowshipDto.getName());
-        fellowship.setStartDate(fellowshipDto.getStartDate());
-        fellowship.setEndDate(fellowshipDto.getEndDate());
-        fellowship.setMonthlyValue(fellowshipDto.getMonthlyValue());
+        fellowship.update(fellowshipDto);
         fellowshipRepository.save(fellowship);
         return new FellowshipDto(fellowship);
     }
@@ -63,7 +60,11 @@ public class FellowshipService {
     public FellowshipDto updateFellowshipWeights(Long id, Map<String, Double> weights) {
         Fellowship fellowship = fellowshipRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Fellowship not found"));
-        fellowship.updateWeights(weights);
+        try {
+            fellowship.updateWeights(weights);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
         fellowshipRepository.save(fellowship);
         return new FellowshipDto(fellowship);
     }

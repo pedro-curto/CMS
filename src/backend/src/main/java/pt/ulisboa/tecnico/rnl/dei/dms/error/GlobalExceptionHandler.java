@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.net.BindException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -42,8 +40,12 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
-	public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-		return new ErrorResponse("Validation failed", ex.getBindingResult().toString());
+	public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+		Map<String, String> errors = new HashMap<>();
+		ex.getBindingResult().getFieldErrors().forEach(error ->
+				errors.put(error.getField(), error.getDefaultMessage())
+		);
+		return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(Exception.class)

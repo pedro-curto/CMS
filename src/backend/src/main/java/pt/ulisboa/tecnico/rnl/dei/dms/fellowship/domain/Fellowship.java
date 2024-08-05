@@ -1,10 +1,7 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain.Enrollment;
@@ -61,6 +58,8 @@ public class Fellowship {
 		this.monthlyValue = fellowshipDto.getMonthlyValue();
 		this.weights = fellowshipDto.getWeights() != null ? fellowshipDto.getWeights()
 				: initializeDefaultWeights();
+		validateDates();
+		verifyWeights();
 	}
 
 	public void addEnrollment(Enrollment enrollment) {
@@ -88,9 +87,39 @@ public class Fellowship {
 	}
 
 	public void updateWeights(Map<String, Double> weights) {
-		weights.forEach((category, weight) -> {
-			EvaluationCategory evaluationCategory = EvaluationCategory.valueOf(category);
-			updateWeight(evaluationCategory, weight);
-		});
+		for (Map.Entry<String, Double> entry : weights.entrySet()) {
+			EvaluationCategory category = EvaluationCategory.valueOf(entry.getKey());
+			updateWeight(category, entry.getValue());
+		}
+		verifyWeights();
+	}
+
+	public void update(FellowshipDto fellowshipDto) {
+		// validate fellowshipDto
+		setName(fellowshipDto.getName());
+		setDescription(fellowshipDto.getDescription());
+		setStartDate(fellowshipDto.getStartDate());
+		setEndDate(fellowshipDto.getEndDate());
+		setMonthlyValue(fellowshipDto.getMonthlyValue());
+		setWeights(fellowshipDto.getWeights() != null ? fellowshipDto.getWeights()
+				: initializeDefaultWeights());
+		validateDates();
+		verifyWeights();
+	}
+
+	private void validateDates() {
+		if (startDate.isAfter(endDate)) {
+			throw new IllegalArgumentException("Start date must be before end date");
+		}
+	}
+
+	private void verifyWeights() {
+		double sum = 0;
+		for (Map.Entry<EvaluationCategory, Double> entry : weights.entrySet()) {
+			sum += entry.getValue();
+		}
+		if (sum != 1) {
+			throw new IllegalArgumentException("Sum of weights must be 1");
+		}
 	}
 }
