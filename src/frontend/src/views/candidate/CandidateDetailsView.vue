@@ -61,13 +61,12 @@
     <!-- Action Buttons -->
     <v-card-actions>
       <v-btn color="primary" @click="goBack">Back</v-btn>
-      <v-btn color="secondary" @click="goToCandidatesPage">Manage All Candidates</v-btn>
     </v-card-actions>
   </v-container>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import RemoteService from '@/services/RemoteService'
 import type CandidateDto from '@/models/candidate/CandidateDto'
@@ -108,10 +107,6 @@ async function fetchCandidateFellowships(id: number) {
 
 function goBack() {
   router.back()
-}
-
-function goToCandidatesPage() {
-  router.push({ name: 'candidateList' })
 }
 
 function getAvatarUrl(istId: string | undefined): string {

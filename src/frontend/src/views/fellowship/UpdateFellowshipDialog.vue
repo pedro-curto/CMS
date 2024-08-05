@@ -9,6 +9,13 @@
               :rules="nameRules"
               v-model="fellowship.name"
           ></v-text-field>
+            <v-textarea
+                v-model="fellowship.description"
+                label="Description"
+                :rules="descriptionRules"
+                rows="2"
+                auto-grow
+            ></v-textarea>
           <div>
             <label class="v-label">Start Date</label>
             <VueDatePicker
@@ -26,7 +33,7 @@
                 v-model="fellowship.endDate"
                 :enable-time-picker="false"
                 :auto-apply="true"
-                :rules="endDateRules"
+                :rules="dateRules"
                 required
             />
             <span v-if="!fellowship.endDate" class="error-message">End Date is required</span>
@@ -82,15 +89,17 @@ const nameRules = [
 
 const monthlyValueRules = [
   (v: string) => !!v || 'Monthly Value is required',
-  (v: string) => /^\d+(\.\d{1,2})?$/.test(v) || 'Monthly Value must be a valid monetary amount'
+  (v: string) => /^\d+(\.\d{1,2})?$/.test(v) || 'Monthly Value must be a valid monetary amount',
+  // can't be zero
+  (v: string) => parseFloat(v) > 0 || 'Monthly Value must be greater than zero'
 ]
 
 const dateRules = [
   (v: string) => !!v || 'Date is required'
 ]
 
-const endDateRules = [
-  (v: string) => !!v || 'End Date is required',
+const descriptionRules = [
+  (v: string) => v.length <= 500 || 'Description must be less than 500 characters'
 ]
 
 watch(props, (newProps)=> {

@@ -26,6 +26,13 @@
               :rules="nameRules"
               required
           ></v-text-field>
+          <v-textarea
+            v-model="newFellowship.description"
+            label="Description"
+            :rules="descriptionRules"
+            rows="2"
+            auto-grow
+          ></v-textarea>
 
           <div>
             <label class="v-label">Start Date</label>
@@ -89,6 +96,7 @@ import RemoteService from '@/services/RemoteService'
 import type FellowshipDto from '@/models/fellowship/FellowshipDto'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import {de} from "vuetify/locale";
 
 const dialog = ref(false)
 const valid = ref(false)
@@ -115,6 +123,10 @@ const monthlyValueRules = [
 
 const dateRules = [
   (v: string) => !!v || 'Date is required'
+]
+
+const descriptionRules = [
+  (v: string) => v.length <= 500 || 'Description must be less than 500 characters'
 ]
 
 watch(dialog, (newVal) => {

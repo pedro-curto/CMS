@@ -49,7 +49,6 @@ import RemoteService from '@/services/RemoteService'
 import type CandidateDto from "@/models/candidate/CandidateDto"
 
 const props = defineProps<{ candidate: CandidateDto }>()
-const dialog = ref(false)
 const valid = ref(false)
 const form = ref(null)
 const candidate = ref<CandidateDto>({
