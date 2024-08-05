@@ -5,8 +5,9 @@
         <h1 class="text-center">Evaluation Details</h1>
       </v-col>
     </v-row>
-
-    <v-row v-if="evaluation">
+    <!-- Presents evaluation details if the candidate evaluation was already made -->
+    <v-container v-if="evaluation">
+    <v-row >
       <v-col>
         <v-card class="pa-6" outlined>
           <v-card-title class="headline">Evaluation for Candidate {{ candidateId }}</v-card-title>
@@ -21,29 +22,6 @@
                 </v-card>
               </v-col>
             </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <v-row v-else>
-      <v-col>
-        <v-card class="pa-6" outlined>
-          <v-card-title class="headline">Create Evaluation for Candidate {{ candidateId }}</v-card-title>
-          <v-card-subtitle class="text-h6 mb-4">Enter Scores</v-card-subtitle>
-          <v-divider></v-divider>
-          <v-card-text>
-            <v-form @submit.prevent="submitEvaluation">
-              <v-row>
-                <v-col v-for="category in evaluationCategories" :key="category" cols="12" sm="6" md="4">
-                  <v-text-field
-                      v-model="newEvaluation.scores[category]"
-                      :label="`${category} Score`"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-btn type="submit" color="primary">Submit</v-btn>
-            </v-form>
           </v-card-text>
         </v-card>
       </v-col>
@@ -64,6 +42,38 @@
         </v-card>
       </v-col>
     </v-row>
+    </v-container>
+    <!-- If the candidate evaluation was not made yet, presents the form to create one -->
+    <v-row v-else>
+      <v-col>
+        <v-card class="pa-6 md-6" outlined>
+          <v-card-title class="headline">Create Evaluation for Candidate {{ candidateId }}</v-card-title>
+          <v-card-subtitle class="text-h6 mb-4">Enter Scores</v-card-subtitle>
+          <v-divider></v-divider>
+          <v-card-text>
+            <v-form ref="form" v-model="valid" lazy-validation>
+              <v-row>
+                <v-col v-for="category in evaluationCategories" :key="category" cols="12" sm="6" md="4">
+                  <v-text-field
+                      v-model="newEvaluation.scores[category]"
+                      :label="`${category} Score`"
+                      :rules="scoreRules"
+                      required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-card-text>
+          <v-spacer></v-spacer>
+          <v-btn
+              type="submit"
+              color="primary"
+              :disabled="!valid"
+              @click="submitEvaluation"
+          >Submit</v-btn>
+        </v-card>
+      </v-col>
+    </v-row>
 
     <v-card-actions>
       <v-btn color="primary" @click="goBack">Back</v-btn>
@@ -79,6 +89,7 @@ import type EvaluationDto from '@/models/evaluation/EvaluationDto'
 import router from "@/router";
 
 const route = useRoute()
+const valid = ref(false)
 const candidateId = Number(route.params.candidateId)
 const fellowshipId = Number(route.params.id)
 const enrollmentId = ref<number | null>(null)
@@ -89,6 +100,12 @@ const newEvaluation = ref<EvaluationDto>({
   enrollmentId: null,
   scores: {}
 })
+
+// validation rules
+const scoreRules = [
+  (v: number) => !!v || 'Score is required',
+  (v: number) => v >= 0 && v <= 20 || 'Score must be between 0 and 20'
+]
 
 onMounted(async () => {
   try {
