@@ -14,7 +14,7 @@
               v-model.number="weights[category]"
               :rules="weightRules"
               type="number"
-              step="0.01"
+              step="0.1"
               min="0"
               max="1"
               required
@@ -53,7 +53,6 @@ const weightRules = [
   (v: number) => !!v || 'Weight is required',
   (v: number) => v >= 0 && v <= 1 || 'Weight must be between 0 and 1'
     // total sum of weights must be 1
-
 ];
 
 const fetchWeights = async () => {
@@ -76,7 +75,8 @@ const updateWeights = async () => {
 };
 
 const submitForm = () => {
-  if (valid.value && totalWeight.value === 1) {
+  const diff = 0.01;
+  if (valid.value && Math.abs(totalWeight.value -1) <= diff) {
     updateWeights();
   } else {
     alert('Total sum of weights must be 1.');
