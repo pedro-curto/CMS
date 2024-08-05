@@ -12,14 +12,18 @@ public enum ErrorMessage {
 
     NO_ENROLLMENTS_FOUND("No enrollments found"),
 
-    NO_WINNER_FOUND("No winner found");
+    NO_WINNER_FOUND("No winner found"),
 
    // Fellowship
 
     // Candidate
 
+    CANDIDATE_NOT_FOUND("Candidate with id %s not found")
+
     // Enrollment
 
+
+    ;
     public final String label;
 
     ErrorMessage(String label) {
