@@ -1,7 +1,7 @@
 <template>
   <div class="pa-4 text-center">
       <v-card prepend-icon="mdi-briefcase-edit" title="Update Fellowship Details">
-        <v-card-text>
+        <v-card-text class="overflow-auto" style="max-height: 60vh;">
           <v-form ref="form" v-model="valid" lazy-validation>
           <v-text-field
               label="Name*"
@@ -68,7 +68,6 @@ import VueDatePicker from '@vuepic/vue-datepicker'
 const form = ref(null)
 const valid = ref(false)
 const props = defineProps<{ fellowship: FellowshipDto }>()
-const dialog = ref(false)
 const fellowship = ref<FellowshipDto>({
   ...props.fellowship
 })
@@ -83,7 +82,6 @@ const nameRules = [
 
 const monthlyValueRules = [
   (v: string) => !!v || 'Monthly Value is required',
-  (v: string) => v.length > 0 || 'Monthly Value must not be blank',
   (v: string) => /^\d+(\.\d{1,2})?$/.test(v) || 'Monthly Value must be a valid monetary amount'
 ]
 
@@ -104,12 +102,22 @@ const closeDialog = () => {
 }
 
 const submitForm = async () => {
-  console.log(valid.value)
-  if (form.value && form.value.validate()) {
-    await RemoteService.updateFellowship(fellowship.value)
+  if (form.value && form.value.validate() && validateDates()) {
+    await RemoteService.updateFellowship(fellowship.value.id, fellowship.value)
     emit('fellowship-updated')
     closeDialog()
   }
+}
+
+const validateDates = () => {
+  if (!fellowship.value.startDate || !fellowship.value.endDate) {
+    return false
+  }
+  if (new Date(fellowship.value.startDate) > new Date(fellowship.value.endDate)) {
+    alert('End Date must be after Start Date')
+    return false
+  }
+  return true
 }
 
 </script>
