@@ -85,7 +85,7 @@ const nameRules = [
 
 const emailRules = [
   (v: string) => !!v || 'Email is required',
-  (v: string) => /.+@.+\..+/.test(v) || 'Email must be valid'
+  (v: string) => /.+@.+\..+/.test(v) || 'Email must be valid: name@example.com'
 ]
 
 const resetForm = () => {

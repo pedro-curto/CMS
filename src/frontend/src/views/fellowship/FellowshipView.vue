@@ -32,7 +32,7 @@
     </template>
   </v-data-table>
 
-  <v-dialog v-model="dialog" max-width="400">
+  <v-dialog v-model="dialog" max-width="600px" max-height="700px">
     <UpdateFellowshipDialog
         v-if="selectedFellowship"
         :fellowship="selectedFellowship"
@@ -49,7 +49,6 @@ import RemoteService from '@/services/RemoteService'
 import type FellowshipDto from '@/models/fellowship/FellowshipDto'
 import CreateFellowshipDialog from '@/views/fellowship/CreateFellowshipDialog.vue'
 import UpdateFellowshipDialog from '@/views/fellowship/UpdateFellowshipDialog.vue'
-import type CandidateDto from "@/models/candidate/CandidateDto";
 import router from '@/router'
 
 const search = ref('')

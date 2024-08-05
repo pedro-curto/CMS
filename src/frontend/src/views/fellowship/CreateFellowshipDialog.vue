@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="1000px" max-height="1200px">
+  <v-dialog v-model="dialog" max-width="600px" max-height="700px">
     <template v-slot:activator="{ props: activatorProps }">
       <v-btn
           class="text-none font-weight-regular"
@@ -9,12 +9,15 @@
           color="primary"
       ></v-btn>
     </template>
-
     <v-card>
       <v-card-title>
-        <span class="headline">Create a new Fellowship</span>
+        <v-row align="center">
+          <v-col class="d-flex align-center justify-center">
+            <v-icon class="mr-2">mdi-briefcase-plus</v-icon>
+            <span class="headline">Create a New Fellowship</span>
+          </v-col>
+        </v-row>
       </v-card-title>
-
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-text-field
@@ -45,7 +48,7 @@
                   v-model="newFellowship.endDate"
                   :enable-time-picker="false"
                   :auto-apply="true"
-                  :rules="endDateRules"
+                  :rules="dateRules"
                   required
               />
               <span v-if="!newFellowship.endDate" class="error-message">End Date is required</span>
@@ -114,10 +117,6 @@ const dateRules = [
   (v: string) => !!v || 'Date is required'
 ]
 
-const endDateRules = [
-  (v: string) => !!v || 'End Date is required',
-]
-
 watch(dialog, (newVal) => {
   if (!newVal) {
     resetFellowship()
@@ -132,11 +131,22 @@ const resetFellowship = () => {
 }
 
 const submitForm = async () => {
-  if (form.value && form.value.validate() && newFellowship.startDate && newFellowship.endDate) {
+  if (form.value && form.value.validate() && validateDates()) {
     await RemoteService.addFellowship(newFellowship)
     dialog.value = false
     emit('fellowship-created')
   }
+}
+
+const validateDates = () => {
+  if (!newFellowship.startDate || !newFellowship.endDate) {
+    return false
+  }
+  if (new Date(newFellowship.startDate) > new Date(newFellowship.endDate)) {
+    alert('End Date must be after Start Date')
+    return false
+  }
+  return true
 }
 
 </script>
