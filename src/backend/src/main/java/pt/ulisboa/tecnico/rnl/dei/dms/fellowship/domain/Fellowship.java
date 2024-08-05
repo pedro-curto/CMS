@@ -5,8 +5,11 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain.Enrollment;
+import pt.ulisboa.tecnico.rnl.dei.dms.error.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.domain.EvaluationCategory;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto.FellowshipDto;
+import static pt.ulisboa.tecnico.rnl.dei.dms.error.ErrorMessage.START_DATE_BEFORE_END_DATE;
+import static pt.ulisboa.tecnico.rnl.dei.dms.error.ErrorMessage.WRONG_WEIGHTS_SUM;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -109,7 +112,7 @@ public class Fellowship {
 
 	private void validateDates() {
 		if (startDate.isAfter(endDate)) {
-			throw new IllegalArgumentException("Start date must be before end date");
+			throw new CMSException(START_DATE_BEFORE_END_DATE);
 		}
 	}
 
@@ -119,7 +122,7 @@ public class Fellowship {
 			sum += entry.getValue();
 		}
 		if (sum != 1) {
-			throw new IllegalArgumentException("Sum of weights must be 1");
+			throw new CMSException(WRONG_WEIGHTS_SUM, String.valueOf(sum));
 		}
 	}
 }

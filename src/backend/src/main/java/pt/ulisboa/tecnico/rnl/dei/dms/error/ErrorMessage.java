@@ -8,14 +8,14 @@ public enum ErrorMessage {
 
     EVALUATION_ALREADY_EXISTS("Evaluation already exists"),
 
-    FELLOWSHIP_NOT_FOUND("Fellowship with id %s not found"),
-
     NO_ENROLLMENTS_FOUND("No enrollments found"),
 
     NO_WINNER_FOUND("No winner found"),
 
    // Fellowship
-
+   FELLOWSHIP_NOT_FOUND("Fellowship with id %s not found"),
+    START_DATE_BEFORE_END_DATE("Start date must be before end date"),
+    WRONG_WEIGHTS_SUM("Weights sum must be 1. Sum: %s"),
     // Candidate
 
     CANDIDATE_NOT_FOUND("Candidate with id %s not found")
