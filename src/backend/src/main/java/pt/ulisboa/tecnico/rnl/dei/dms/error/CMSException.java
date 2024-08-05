@@ -6,36 +6,36 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class ExceptionHandler extends RuntimeException {
-	private static final Logger logger = LoggerFactory.getLogger(ExceptionHandler.class);
+public class CMSException extends RuntimeException {
+	private static final Logger logger = LoggerFactory.getLogger(CMSException.class);
 
 	private final ErrorMessage errorMessage;
 
-	public ExceptionHandler(ErrorMessage errorMessage) {
+	public CMSException(ErrorMessage errorMessage) {
 		super(errorMessage.label);
 		logger.error(errorMessage.label);
 		this.errorMessage = errorMessage;
 	}
 
-	public ExceptionHandler(ErrorMessage errorMessage, String value) {
+	public CMSException(ErrorMessage errorMessage, String value) {
 		super(String.format(errorMessage.label, value));
 		logger.error(String.format(errorMessage.label, value));
 		this.errorMessage = errorMessage;
 	}
 
-	public ExceptionHandler(ErrorMessage errorMessage, String value1, String value2) {
+	public CMSException(ErrorMessage errorMessage, String value1, String value2) {
 		super(String.format(errorMessage.label, value1, value2));
 		logger.error(String.format(errorMessage.label, value1, value2));
 		this.errorMessage = errorMessage;
 	}
 
-	public ExceptionHandler(ErrorMessage errorMessage, Long value) {
+	public CMSException(ErrorMessage errorMessage, Long value) {
 		super(String.format(errorMessage.label, value));
 		logger.error(String.format(errorMessage.label, value));
 		this.errorMessage = errorMessage;
 	}
 
-	public ExceptionHandler(ErrorMessage errorMessage, Long value1, Long value2) {
+	public CMSException(ErrorMessage errorMessage, Long value1, Long value2) {
 		super(String.format(errorMessage.label, value1, value2));
 		logger.error(String.format(errorMessage.label, value1, value2));
 		this.errorMessage = errorMessage;

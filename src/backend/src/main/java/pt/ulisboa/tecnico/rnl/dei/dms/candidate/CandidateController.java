@@ -1,8 +1,7 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.candidate;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidate.dto.CandidateDto;
 
@@ -31,25 +30,13 @@ public class CandidateController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<CandidateDto> updateCandidate(@PathVariable Long id, @RequestBody CandidateDto candidateDto) {
-        try {
-			CandidateDto result = candidateService.updateCandidate(id, candidateDto);
-			return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+    public CandidateDto updateCandidate(@PathVariable Long id, @Valid @RequestBody CandidateDto candidateDto) {
+        return candidateService.updateCandidate(id, candidateDto);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteCandidate(@PathVariable Long id) {
-        try {
-            candidateService.deleteCandidate(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public List<CandidateDto> deleteCandidate(@PathVariable Long id) {
+        return candidateService.deleteCandidate(id);
     }
 
 }

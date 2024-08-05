@@ -3,7 +3,6 @@ package pt.ulisboa.tecnico.rnl.dei.dms.candidate.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -52,4 +51,9 @@ public class Candidate {
 		this.enrollments.remove(enrollment);
 	}
 
+	public void update(CandidateDto candidateDto) {
+		setName(candidateDto.getName());
+		setEmail(candidateDto.getEmail());
+		setIstId(candidateDto.getIstId());
+	}
 }

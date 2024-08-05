@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidate.domain.Candidate;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidate.dto.CandidateDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidate.repository.CandidateRepository;
+import pt.ulisboa.tecnico.rnl.dei.dms.error.CMSException;
+import static pt.ulisboa.tecnico.rnl.dei.dms.error.ErrorMessage.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +29,7 @@ public class CandidateService {
     @Transactional
     public CandidateDto getCandidate(Long id) {
         Candidate candidate = candidateRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Candidate not found"));
+                .orElseThrow(() -> new CMSException(CANDIDATE_NOT_FOUND, id));
         return new CandidateDto(candidate);
     }
 
@@ -41,20 +43,19 @@ public class CandidateService {
     @Transactional
     public CandidateDto updateCandidate(Long id, CandidateDto candidateDto) {
         Candidate candidate = candidateRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Candidate not found"));
-        candidate.setIstId(candidateDto.getIstId());
-        candidate.setName(candidateDto.getName());
-        candidate.setEmail(candidateDto.getEmail());
+                .orElseThrow(() -> new CMSException(CANDIDATE_NOT_FOUND, id));
+        candidate.update(candidateDto);
         candidateRepository.save(candidate);
         return new CandidateDto(candidate);
     }
 
     @Transactional
-    public void deleteCandidate(Long id) {
+    public List<CandidateDto> deleteCandidate(Long id) {
         if (!candidateRepository.existsById(id)) {
-            throw new IllegalArgumentException("Candidate not found");
+            throw new CMSException(CANDIDATE_NOT_FOUND, id);
         }
         candidateRepository.deleteById(id);
+        return getCandidates();
     }
     
 }
