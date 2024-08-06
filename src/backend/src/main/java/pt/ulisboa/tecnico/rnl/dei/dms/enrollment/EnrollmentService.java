@@ -35,7 +35,15 @@ public class EnrollmentService {
 				.orElseThrow(() -> new CMSException(FELLOWSHIP_NOT_FOUND, enrollmentDto.getFellowshipId()));
 		Candidate candidate = candidateRepository.findById(enrollmentDto.getCandidateId())
 				.orElseThrow(() -> new CMSException(CANDIDATE_NOT_FOUND, enrollmentDto.getCandidateId()));
-
+		if (fellowship == null) {
+			throw new CMSException(FELLOWSHIP_REQUIRED);
+		}
+		if (candidate == null) {
+			throw new CMSException(CANDIDATE_REQUIRED);
+		}
+		if (enrollmentRepository.getEnrollmentByFellowshipIdAndCandidateId(fellowship.getId(), candidate.getId()) != null) {
+			throw new CMSException(ENROLLMENT_ALREADY_EXISTS);
+		}
 		Enrollment enrollment = new Enrollment(fellowship, candidate, enrollmentDto);
 		enrollmentRepository.save(enrollment);
 

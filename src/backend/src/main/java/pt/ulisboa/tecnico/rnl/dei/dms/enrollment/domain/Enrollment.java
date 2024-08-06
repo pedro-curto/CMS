@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,11 +28,9 @@ public class Enrollment {
 	private LocalDate enrollmentDateTime;
 	@ManyToOne
 	@JoinColumn(name = "fellowship_id")
-	@NotNull
 	private Fellowship fellowship;
 	@ManyToOne
 	@JoinColumn(name = "candidate_id")
-	@NotNull
 	private Candidate candidate;
 	// when an enrollment is removed, the related evaluation is also removed
 	@OneToOne(mappedBy = "enrollment", cascade = CascadeType.ALL, orphanRemoval = true)

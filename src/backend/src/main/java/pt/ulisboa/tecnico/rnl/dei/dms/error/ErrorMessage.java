@@ -38,8 +38,9 @@ public enum ErrorMessage {
     INVALID_EMAIL("Invalid email: %s"),
 
     // Enrollment
-
-
+    FELLOWSHIP_REQUIRED("Fellowship ID is required"),
+    CANDIDATE_REQUIRED("Candidate ID is required"),
+    ENROLLMENT_ALREADY_EXISTS("An enrollment between this fellowship and this candidate already exists"),
     NO_SUCH_ENROLLMENT("No such enrollment");
     public final String label;
 
