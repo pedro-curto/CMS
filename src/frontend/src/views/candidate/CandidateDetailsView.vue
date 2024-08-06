@@ -45,7 +45,7 @@
     </v-row>
     <v-row>
       <v-col v-if="!loading" v-for="fellowship in candidateFellowships" :key="fellowship.id" cols="12" sm="6" md="4">
-        <v-card class="fellowship-card" outlined>
+        <v-card class="fellowship-card" outlined @click="goToFellowshipDetails(fellowship.id)">
           <v-card-title>
             <v-icon>mdi-school</v-icon>
             <span>{{ fellowship.name }}</span>
@@ -103,6 +103,10 @@ async function fetchCandidateFellowships(id: number) {
     error.value = 'Failed to fetch fellowships.'
     console.error(err)
   }
+}
+
+function goToFellowshipDetails(candidateId: number) {
+  router.push(`/fellowship/${candidateId}`)
 }
 
 function goBack() {

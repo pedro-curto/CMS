@@ -105,6 +105,10 @@ function isEnrolled(candidateId: number): boolean {
   return false
 }
 
+function goToCandidateDetails(candidateId: number) {
+  router.push({ name: 'candidateDetails', params: { id: candidateId } })
+}
+
 function goBack() {
   router.back()
 }

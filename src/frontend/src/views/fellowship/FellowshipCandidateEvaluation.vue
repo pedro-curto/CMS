@@ -10,7 +10,7 @@
     <v-row >
       <v-col>
         <v-card class="pa-6" outlined>
-          <v-card-title class="headline">Evaluation for Candidate {{ candidateId }}</v-card-title>
+          <v-card-title class="headline">Evaluation for {{ candidate?.name }}</v-card-title>
           <v-card-subtitle class="text-h6 mb-4">Scores</v-card-subtitle>
           <v-divider></v-divider>
           <v-card-text>
@@ -47,7 +47,7 @@
     <v-row v-else>
       <v-col>
         <v-card class="pa-6 md-6" outlined>
-          <v-card-title class="headline">Create Evaluation for Candidate {{ candidateId }}</v-card-title>
+          <v-card-title class="headline">Create Evaluation for {{ candidate?.name }}</v-card-title>
           <v-card-subtitle class="text-h6 mb-4">Enter Scores</v-card-subtitle>
           <v-divider></v-divider>
           <v-card-text>
@@ -87,6 +87,7 @@ import { useRoute } from 'vue-router'
 import RemoteService from '@/services/RemoteService'
 import type EvaluationDto from '@/models/evaluation/EvaluationDto'
 import router from "@/router";
+import type CandidateDto from "@/models/candidate/CandidateDto";
 
 const route = useRoute()
 const valid = ref(false)
@@ -94,6 +95,7 @@ const candidateId = Number(route.params.candidateId)
 const fellowshipId = Number(route.params.id)
 const enrollmentId = ref<number | null>(null)
 const evaluation = ref<EvaluationDto | null>(null)
+const candidate = ref<CandidateDto | null>(null)
 const finalResult = ref<number | null>(null)
 const evaluationCategories = ref<string[]>([])
 const newEvaluation = ref<EvaluationDto>({
@@ -110,6 +112,7 @@ const scoreRules = [
 onMounted(async () => {
   try {
     enrollmentId.value = await RemoteService.getEnrollmentId(fellowshipId, candidateId)
+    candidate.value = await RemoteService.getCandidateById(candidateId)
     try {
       evaluation.value = await RemoteService.getEvaluationDetails(enrollmentId.value)
       finalResult.value = await RemoteService.getCandidateFinalEvaluation(enrollmentId.value)

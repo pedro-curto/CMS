@@ -115,6 +115,7 @@
                       <div class="text-h5">{{ fellowshipWinner?.name }}</div>
                       <div class="text-subtitle-1">{{ fellowshipWinner?.istId }}</div>
                       <div class="text-body-1">{{ fellowshipWinner?.email }}</div>
+                      <div class="text-h6 mt-4">Final Grade: {{ finalGrade !== null ? finalGrade.toFixed(2) : 'N/A' }}</div>
                     </v-col>
                   </v-row>
                 </v-card-text>
@@ -153,6 +154,7 @@ const router = useRouter()
 const fellowship = ref<FellowshipDto | null>(null)
 const enrolledCandidates = ref<CandidateDto[]>([])
 const fellowshipWinner = ref<CandidateDto | null>(null)
+const finalGrade = ref<number | null>(null);
 const weightsDialog = ref(false)
 const winnerDialog = ref(false)
 const loading = ref(true)
@@ -217,6 +219,9 @@ function closeWeightsDialog() {
 async function selectFellowshipWinner() {
   try {
     fellowshipWinner.value = await RemoteService.getFellowshipWinner(fellowship.value.id)
+    // gets grade of the winner
+    const enrollmentId = await RemoteService.getEnrollmentId(fellowship.value.id, fellowshipWinner.value!.id)
+    finalGrade.value = await RemoteService.getCandidateFinalEvaluation(enrollmentId)
     winnerDialog.value = true
   } catch (err) {
     error.value = 'Failed to fetch evaluation weights.'
