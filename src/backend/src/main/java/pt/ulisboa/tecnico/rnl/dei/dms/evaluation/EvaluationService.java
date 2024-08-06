@@ -103,7 +103,8 @@ public class EvaluationService {
 		if (winner == null) {
 			throw new CMSException(NO_WINNER_FOUND);
 		}
-
+		fellowship.setWinnerId(winner.getCandidate().getId());
+		fellowship.closeFellowship();
 		return new CandidateDto(winner.getCandidate());
 	}
 }

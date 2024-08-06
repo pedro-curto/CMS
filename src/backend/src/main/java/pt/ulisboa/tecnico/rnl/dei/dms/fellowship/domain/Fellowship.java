@@ -29,6 +29,8 @@ public class Fellowship {
 	private LocalDate startDate;
 	private LocalDate endDate;
 	private BigDecimal monthlyValue;
+	private boolean closed = false;
+	private Long winnerId;
 	@OneToMany(mappedBy = "fellowship", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Enrollment> enrollments = new ArrayList<>();
 	@ElementCollection
@@ -169,5 +171,9 @@ public class Fellowship {
 		if (sum != 1) {
 			throw new CMSException(WRONG_WEIGHTS_SUM, String.valueOf(sum));
 		}
+	}
+
+	public void closeFellowship() {
+		closed = true;
 	}
 }

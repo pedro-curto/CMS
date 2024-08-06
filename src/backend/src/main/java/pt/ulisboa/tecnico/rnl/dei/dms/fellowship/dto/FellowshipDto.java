@@ -20,6 +20,8 @@ public class FellowshipDto {
 	private LocalDate startDate;
 	private LocalDate endDate;
 	private BigDecimal monthlyValue;
+	private boolean closed;
+	private Long winnerId;
 
 	private Map<EvaluationCategory, Double> weights;
 
@@ -30,6 +32,8 @@ public class FellowshipDto {
 		this.startDate = fellowship.getStartDate();
 		this.endDate = fellowship.getEndDate();
 		this.monthlyValue = fellowship.getMonthlyValue();
+		this.closed = fellowship.isClosed();
+		this.winnerId = fellowship.getWinnerId();
 		this.weights = fellowship.getWeights();
 	}
 
