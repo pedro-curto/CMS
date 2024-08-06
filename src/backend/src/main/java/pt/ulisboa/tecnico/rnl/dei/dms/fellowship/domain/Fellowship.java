@@ -1,15 +1,13 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.error.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.domain.EvaluationCategory;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto.FellowshipDto;
-import static pt.ulisboa.tecnico.rnl.dei.dms.error.ErrorMessage.START_DATE_BEFORE_END_DATE;
-import static pt.ulisboa.tecnico.rnl.dei.dms.error.ErrorMessage.WRONG_WEIGHTS_SUM;
+import static pt.ulisboa.tecnico.rnl.dei.dms.error.ErrorMessage.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,17 +24,10 @@ public class Fellowship {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@NotBlank(message = "Fellowship name is mandatory")
-	@Size(min=3, max=25, message = "Fellowship name must be between 3 and 25 characters")
 	private String name;
-	@Size(max=255, message = "Fellowship description must be less than 255 characters")
 	private String description;
-	@NotNull
 	private LocalDate startDate;
-	@NotNull
 	private LocalDate endDate;
-	@DecimalMin(value="0.0", inclusive=false, message = "Fellowship value must be greater than 0")
-	@NotNull
 	private BigDecimal monthlyValue;
 	@OneToMany(mappedBy = "fellowship", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Enrollment> enrollments = new ArrayList<>();
@@ -61,6 +52,7 @@ public class Fellowship {
 		this.monthlyValue = fellowshipDto.getMonthlyValue();
 		this.weights = fellowshipDto.getWeights() != null ? fellowshipDto.getWeights()
 				: initializeDefaultWeights();
+		verifyInvariants();
 		validateDates();
 		verifyWeights();
 	}
@@ -106,8 +98,61 @@ public class Fellowship {
 		setMonthlyValue(fellowshipDto.getMonthlyValue());
 		setWeights(fellowshipDto.getWeights() != null ? fellowshipDto.getWeights()
 				: initializeDefaultWeights());
+		verifyInvariants();
 		validateDates();
 		verifyWeights();
+	}
+
+	private void verifyInvariants() {
+		nameIsRequired();
+		nameBetweenTwoAndTwentyFiveCharacters();
+		descriptionLessThanTwoHundredFiftyFiveCharacters();
+		startDateIsRequired();
+		endDateIsRequired();
+		monthlyValueIsRequired();
+		monthlyValueGreaterThanZero();
+	}
+
+	private void nameIsRequired() {
+		if (name == null || name.isBlank()) {
+			throw new CMSException(FELLOWSHIP_NAME_REQUIRED);
+		}
+	}
+
+	private void nameBetweenTwoAndTwentyFiveCharacters() {
+		if (name.length() < 3 || name.length() > 25) {
+			throw new CMSException(FELLOWSHIP_NAME_SIZE);
+		}
+	}
+
+	private void descriptionLessThanTwoHundredFiftyFiveCharacters() {
+		if (description != null && description.length() > 255) {
+			throw new CMSException(FELLOWSHIP_DESCRIPTION_SIZE);
+		}
+	}
+
+	private void startDateIsRequired() {
+		if (startDate == null) {
+			throw new CMSException(FELLOWSHIP_START_DATE_REQUIRED);
+		}
+	}
+
+	private void endDateIsRequired() {
+		if (endDate == null) {
+			throw new CMSException(FELLOWSHIP_END_DATE_REQUIRED);
+		}
+	}
+
+	private void monthlyValueIsRequired() {
+		if (monthlyValue == null) {
+			throw new CMSException(FELLOWSHIP_MONTHLY_VALUE_REQUIRED);
+		}
+	}
+
+	private void monthlyValueGreaterThanZero() {
+		if (monthlyValue.compareTo(BigDecimal.ZERO) <= 0) {
+			throw new CMSException(FELLOWSHIP_VALUE_MIN);
+		}
 	}
 
 	private void validateDates() {

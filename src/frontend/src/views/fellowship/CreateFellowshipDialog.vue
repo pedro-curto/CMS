@@ -126,7 +126,7 @@ const dateRules = [
 ]
 
 const descriptionRules = [
-  (v: string) => v.length <= 500 || 'Description must be less than 500 characters'
+  (v: string) => v.length <= 255 || 'Description must be less than 255 characters'
 ]
 
 watch(dialog, (newVal) => {
