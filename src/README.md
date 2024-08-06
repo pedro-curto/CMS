@@ -54,12 +54,6 @@ Create a copy of the `application.properties` file.
 cp ./backend/src/main/resources/application-local.properties.example ./backend/src/main/resources/application-local.properties
 ```
 
-If you're running your database using Docker, the datasource variables should match the ones in `Docker-compose.yml`.
-
-Feel free to change them, but make sure that the `docker-compose.yml` variables match the ones in
-the `application.properties` file. It currently names the database `dmsdb`, and you can access it with 
-the user `postgres` and password `postgres` via port `7654` (explained below).
-
 To build and run the backend, execute the following commands:
 
 ```bash
@@ -117,4 +111,3 @@ You can run it with the following command, after starting the backend:
 ```bash
 psql -h localhost -U postgres -p 7654 dmsdb -f backend/src/main/resources/sqlData/bigtest.sql
 ```
-

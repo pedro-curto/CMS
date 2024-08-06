@@ -4,7 +4,7 @@
 class Candidate {
   +id
   email: string
-  ist_id: string
+  ist_id: Long
   name: string
 }
 
@@ -16,6 +16,8 @@ class Fellowship {
   monthly_value: BigDecimal
   weights: Map<EvaluationCategory, Double>
   description: string
+  closed: boolean
+  winnerId: Long
 }
 
 class Enrollment {
