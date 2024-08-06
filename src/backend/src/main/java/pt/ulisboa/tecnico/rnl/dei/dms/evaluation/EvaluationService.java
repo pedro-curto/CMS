@@ -104,7 +104,6 @@ public class EvaluationService {
 			throw new CMSException(NO_WINNER_FOUND);
 		}
 
-		System.out.println("Winner: " + winner.getCandidate().getName());
 		return new CandidateDto(winner.getCandidate());
 	}
 }

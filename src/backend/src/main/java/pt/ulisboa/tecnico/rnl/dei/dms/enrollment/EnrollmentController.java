@@ -43,7 +43,6 @@ public class EnrollmentController {
 
 	@GetMapping("/getId")
 	public Long getEnrollmentId(@RequestParam Long fellowshipId, @RequestParam Long candidateId) {
-		System.out.println("FellowshipId: " + fellowshipId + " CandidateId: " + candidateId);
 		return enrollmentService.getEnrollmentId(fellowshipId, candidateId);
 	}
 

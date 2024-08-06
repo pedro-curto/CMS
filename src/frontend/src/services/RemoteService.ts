@@ -152,7 +152,6 @@ export default class RemoteService {
   }EnrollmentDto
 
   static async getEnrollmentId(fellowshipId: number, candidateId: number): Promise<number> {
-    console.log(fellowshipId, candidateId)
     return httpClient.get(`/enrollments/getId`,
         { params: { fellowshipId, candidateId}})
         .then((response) => {
@@ -181,7 +180,6 @@ export default class RemoteService {
   }
 
   static async getEvaluationWeights(fellowshipId: number): Promise<number[]> {
-    console.log(fellowshipId)
     return httpClient.get(`/evaluations/getWeights/${fellowshipId}`).then((response) => {
       return response.data
     })

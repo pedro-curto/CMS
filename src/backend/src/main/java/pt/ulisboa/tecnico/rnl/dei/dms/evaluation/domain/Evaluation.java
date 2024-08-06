@@ -47,7 +47,6 @@
 			Map<EvaluationCategory, Double> weights = enrollment.getFellowship().getWeights();
 			double finalScore = 0;
 			for (EvaluationCategory category : scores.keySet()) {
-				System.out.println("CATEGORY: " + category);
 				finalScore += scores.get(category) * weights.get(category);
 			}
 			return finalScore;

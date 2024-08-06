@@ -86,7 +86,6 @@ public class EnrollmentService {
 		if (enrollment == null) {
 			throw new CMSException(NO_SUCH_ENROLLMENT);
 		}
-		System.out.println("EnrollmentId: " + enrollment.getId());
 		return enrollment.getId();
 	}
 
