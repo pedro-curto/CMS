@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +10,8 @@ import pt.ulisboa.tecnico.rnl.dei.dms.candidate.domain.Candidate;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.dto.EnrollmentDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.domain.Evaluation;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain.Fellowship;
+
+import java.time.LocalDate;
 
 @Entity
 // guarantee that the combination of fellowship_id and candidate_id is unique
@@ -25,7 +26,7 @@ public class Enrollment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String motivation;
-	private String enrollmentDateTime;
+	private LocalDate enrollmentDateTime;
 	@ManyToOne
 	@JoinColumn(name = "fellowship_id")
 	@NotNull
@@ -45,7 +46,7 @@ public class Enrollment {
 		this.enrollmentDateTime = enrollmentDto.getEnrollmentDateTime();
 	}
 
-	public Enrollment(String motivation, String enrollmentDateTime, Fellowship fellowship, Candidate candidate) {
+	public Enrollment(String motivation, LocalDate enrollmentDateTime, Fellowship fellowship, Candidate candidate) {
 		this.motivation = motivation;
 		this.enrollmentDateTime = enrollmentDateTime;
 		this.fellowship = fellowship;

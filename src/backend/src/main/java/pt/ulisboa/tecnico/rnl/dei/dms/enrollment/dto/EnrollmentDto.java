@@ -3,9 +3,9 @@ package pt.ulisboa.tecnico.rnl.dei.dms.enrollment.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pt.ulisboa.tecnico.rnl.dei.dms.candidate.dto.CandidateDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain.Enrollment;
-import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto.FellowshipDto;
+
+import java.time.LocalDate;
 
 // simplifies getters, setters and default constructors
 @Data
@@ -14,7 +14,7 @@ import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto.FellowshipDto;
 public class EnrollmentDto {
 	private Long id;
 	private String motivation;
-	private String enrollmentDateTime;
+	private LocalDate enrollmentDateTime;
 	private Long fellowshipId;
 	private Long candidateId;
 
