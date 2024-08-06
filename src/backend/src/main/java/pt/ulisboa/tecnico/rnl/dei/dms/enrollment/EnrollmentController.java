@@ -1,8 +1,7 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.enrollment;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidate.dto.CandidateDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.dto.EnrollmentDto;
@@ -18,84 +17,39 @@ public class EnrollmentController {
 	private EnrollmentService enrollmentService;
 
 	@PostMapping("/enroll")
-	public ResponseEntity<EnrollmentDto> enrollCandidate(@RequestBody EnrollmentDto enrollmentDto) {
-		try {
-			EnrollmentDto result = enrollmentService.enrollCandidate(
-					enrollmentDto.getCandidateId(),
-					enrollmentDto.getFellowshipId(),
-					enrollmentDto);
-			return new ResponseEntity<>(result, HttpStatus.CREATED);
-		} catch (IllegalArgumentException e) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@DeleteMapping("/unenroll")
-	public ResponseEntity<Void> unenrollCandidate(@RequestParam Long fellowshipId, @RequestParam Long candidateId) {
-		try {
-			enrollmentService.unenrollCandidate(fellowshipId, candidateId);
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		} catch (IllegalArgumentException e) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	public EnrollmentDto enrollCandidate(@Valid @RequestBody EnrollmentDto enrollmentDto) {
+		return enrollmentService.enrollCandidate(enrollmentDto);
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Void> deleteEnrollment(@PathVariable Long id) {
-		System.out.println("EnrollmentId: " + id);
-		try {
-			enrollmentService.deleteEnrollment(id);
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		} catch (IllegalArgumentException e) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	public List<EnrollmentDto> deleteEnrollment(@PathVariable Long id) {
+		return enrollmentService.deleteEnrollment(id);
 	}
 
 	@GetMapping("/fellowships/{fellowshipId}/candidates")
-	public ResponseEntity<List<CandidateDto>> getEnrolledCandidatesByFellowship(@PathVariable Long fellowshipId) {
-		try {
-			List<CandidateDto> candidates = enrollmentService.getEnrolledCandidatesByFellowship(fellowshipId);
-			return ResponseEntity.ok(candidates);
-		} catch (IllegalArgumentException e) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	public List<CandidateDto> getEnrolledCandidatesByFellowship(@PathVariable Long fellowshipId) {
+		return enrollmentService.getEnrolledCandidatesByFellowship(fellowshipId);
 	}
 
 	@GetMapping("/candidates/{candidateId}/fellowships")
-	public ResponseEntity<List<FellowshipDto>> getCandidateFellowships(@PathVariable Long candidateId) {
-		try {
-			List<FellowshipDto> fellowships = enrollmentService.getCandidateFellowships(candidateId);
-			return ResponseEntity.ok(fellowships);
-		} catch (IllegalArgumentException e) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	public List<FellowshipDto> getCandidateFellowships(@PathVariable Long candidateId) {
+		return enrollmentService.getCandidateFellowships(candidateId);
 	}
 
 	@GetMapping("/get")
-	public ResponseEntity<List<EnrollmentDto>> getEnrollments() {
-		return ResponseEntity.ok(enrollmentService.getEnrollments());
+	public List<EnrollmentDto> getEnrollments() {
+		return enrollmentService.getEnrollments();
 	}
 
 	@GetMapping("/getId")
-	public ResponseEntity<Long> getEnrollmentId(@RequestParam Long fellowshipId, @RequestParam Long candidateId) {
+	public Long getEnrollmentId(@RequestParam Long fellowshipId, @RequestParam Long candidateId) {
 		System.out.println("FellowshipId: " + fellowshipId + " CandidateId: " + candidateId);
-		return ResponseEntity.ok(enrollmentService.getEnrollmentId(fellowshipId, candidateId));
+		return enrollmentService.getEnrollmentId(fellowshipId, candidateId);
 	}
 
 	@GetMapping("/fellowships/{fellowshipId}")
-	public ResponseEntity<List<EnrollmentDto>> getFellowshipEnrollments(@PathVariable Long fellowshipId) {
-		return ResponseEntity.ok(enrollmentService.getFellowshipEnrollments(fellowshipId));
+	public List<EnrollmentDto> getFellowshipEnrollments(@PathVariable Long fellowshipId) {
+		return enrollmentService.getFellowshipEnrollments(fellowshipId);
 	}
-
 
 }

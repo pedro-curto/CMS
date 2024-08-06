@@ -9,12 +9,15 @@ import pt.ulisboa.tecnico.rnl.dei.dms.candidate.repository.CandidateRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.dto.EnrollmentDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.repository.EnrollmentRepository;
+import pt.ulisboa.tecnico.rnl.dei.dms.error.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain.Fellowship;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto.FellowshipDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.repository.FellowshipRepository;
+import static pt.ulisboa.tecnico.rnl.dei.dms.error.ErrorMessage.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Service
 public class EnrollmentService {
@@ -27,11 +30,11 @@ public class EnrollmentService {
 	private EnrollmentRepository enrollmentRepository;
 
 	@Transactional
-	public EnrollmentDto enrollCandidate(Long candidateId, Long fellowshipId, EnrollmentDto enrollmentDto) {
-		Fellowship fellowship = fellowshipRepository.findById(fellowshipId)
-				.orElseThrow(() -> new IllegalArgumentException("Fellowship not found"));
-		Candidate candidate = candidateRepository.findById(candidateId)
-				.orElseThrow(() -> new IllegalArgumentException("Candidate not found"));
+	public EnrollmentDto enrollCandidate(EnrollmentDto enrollmentDto) {
+		Fellowship fellowship = fellowshipRepository.findById(enrollmentDto.getFellowshipId())
+				.orElseThrow(() -> new CMSException(FELLOWSHIP_NOT_FOUND, enrollmentDto.getFellowshipId()));
+		Candidate candidate = candidateRepository.findById(enrollmentDto.getCandidateId())
+				.orElseThrow(() -> new CMSException(CANDIDATE_NOT_FOUND, enrollmentDto.getCandidateId()));
 
 		Enrollment enrollment = new Enrollment(fellowship, candidate, enrollmentDto);
 		enrollmentRepository.save(enrollment);
@@ -40,33 +43,17 @@ public class EnrollmentService {
 	}
 
 	@Transactional
-	public void unenrollCandidate(Long fellowshipId, Long candidateId) {
-		Enrollment enrollment = enrollmentRepository.getEnrollmentByFellowshipIdAndCandidateId(fellowshipId, candidateId);
-		enrollmentRepository.delete(enrollment);
-	}
-
-	@Transactional
-	public void deleteEnrollment(Long id) {
+	public  List<EnrollmentDto> deleteEnrollment(Long id) {
 		Enrollment enrollment = enrollmentRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Enrollment not found"));
+				.orElseThrow(() -> new CMSException(ENROLLMENT_NOT_FOUND, id));
 		enrollmentRepository.delete(enrollment);
-	}
-
-	@Transactional
-	public List<EnrollmentDto> getEnrollmentsByFellowship(Long fellowshipId) {
-		Fellowship fellowship = fellowshipRepository.findById(fellowshipId)
-				.orElseThrow(() -> new IllegalArgumentException("Fellowship not found"));
-
-		return fellowship.getEnrollments()
-				.stream()
-				.map(EnrollmentDto::new)
-				.toList();
+		return getEnrollments();
 	}
 
 	@Transactional
 	public List<CandidateDto> getEnrolledCandidatesByFellowship(Long fellowshipId) {
 		Fellowship fellowship = fellowshipRepository.findById(fellowshipId)
-				.orElseThrow(() -> new IllegalArgumentException("Fellowship not found"));
+				.orElseThrow(() -> new CMSException(FELLOWSHIP_NOT_FOUND, fellowshipId));
 
 		return fellowship.getEnrollments()
 				.stream()
@@ -77,7 +64,7 @@ public class EnrollmentService {
 	@Transactional
 	public List<FellowshipDto> getCandidateFellowships(Long candidateId) {
 		Candidate candidate = candidateRepository.findById(candidateId)
-				.orElseThrow(() -> new IllegalArgumentException("Candidate not found"));
+				.orElseThrow(() -> new CMSException(CANDIDATE_NOT_FOUND, candidateId));
 
 		return candidate.getEnrollments()
 				.stream()
@@ -94,9 +81,19 @@ public class EnrollmentService {
 	}
 
 	@Transactional
+	public Long getEnrollmentId(Long fellowshipId, Long candidateId) {
+		Enrollment enrollment = enrollmentRepository.getEnrollmentByFellowshipIdAndCandidateId(fellowshipId, candidateId);
+		if (enrollment == null) {
+			throw new CMSException(NO_SUCH_ENROLLMENT);
+		}
+		System.out.println("EnrollmentId: " + enrollment.getId());
+		return enrollment.getId();
+	}
+
+	@Transactional
 	public List<EnrollmentDto> getFellowshipEnrollments(Long fellowshipId) {
 		Fellowship fellowship = fellowshipRepository.findById(fellowshipId)
-				.orElseThrow(() -> new IllegalArgumentException("Fellowship not found"));
+				.orElseThrow(() -> new CMSException(FELLOWSHIP_NOT_FOUND, fellowshipId));
 
 		return fellowship.getEnrollments()
 				.stream()
@@ -104,10 +101,4 @@ public class EnrollmentService {
 				.collect(Collectors.toList());
 	}
 
-	@Transactional
-	public Long getEnrollmentId(Long fellowshipId, Long candidateId) {
-		Enrollment enrollment = enrollmentRepository.getEnrollmentByFellowshipIdAndCandidateId(fellowshipId, candidateId);
-		System.out.println("EnrollmentId: " + enrollment.getId());
-		return enrollment.getId();
-	}
 }

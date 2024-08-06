@@ -18,12 +18,12 @@ public enum ErrorMessage {
     WRONG_WEIGHTS_SUM("Weights sum must be 1. Sum: %s"),
     // Candidate
 
-    CANDIDATE_NOT_FOUND("Candidate with id %s not found")
+    CANDIDATE_NOT_FOUND("Candidate with id %s not found"),
 
     // Enrollment
 
 
-    ;
+    NO_SUCH_ENROLLMENT("No such enrollment");
     public final String label;
 
     ErrorMessage(String label) {

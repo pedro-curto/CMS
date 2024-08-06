@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.rnl.dei.dms.error;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -60,5 +61,16 @@ public class GlobalExceptionHandler {
 	@ResponseBody
 	public ErrorResponse handleException(Exception ex) {
 		return new ErrorResponse("Internal server error", ex.getMessage());
+	}
+
+	// enrollment creation endpoint sends an unfriendly message when a duplicate entry is attempted
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ErrorResponse handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+		if (ex.getMessage().contains("duplicate")) {
+			return new ErrorResponse("Data integrity violation", "Attempted to create a duplicate entry");
+		}
+		return new ErrorResponse("Data integrity violation", "A data integrity violation occurred: " + ex.getMessage());
 	}
 }
