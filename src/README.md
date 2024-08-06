@@ -111,3 +111,10 @@ Check [PostgreSQL documentation](https://www.postgresql.org/docs/current/app-psq
 You can check the documentation folder to see the domain model and a file 
 called `feature_guide.md` with the project's features and implementation decisions.
 
+I added a .sql file to easily populate the database with some data, which makes certain features easier to test. 
+You can run it with the following command, after starting the backend:
+
+```bash
+psql -h localhost -U postgres -p 7654 dmsdb -f backend/src/main/resources/sqlData/bigtest.sql
+```
+
