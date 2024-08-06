@@ -6,10 +6,16 @@
       </v-col>
     </v-row>
 
+    <v-row>
+      <v-col>
+        <v-text-field v-model="searchQuery" label="Search by IST ID" clearable></v-text-field>
+      </v-col>
+    </v-row>
+
     <!-- Candidates Section -->
     <v-row>
-      <v-col v-if="!loading" v-for="candidate in allCandidates" :key="candidate.id" cols="12" sm="6" md="4">
-        <v-card class="candidate-card" outlined>
+      <v-col v-if="!loading" v-for="candidate in paginatedCandidates" :key="candidate.id" cols="12" sm="6" md="4">
+        <v-card class="candidate-card" outlined @click="goToCandidateDetails(candidate.id)">
           <v-card-title>
             <v-avatar size="56" class="mr-3">
               <v-img :src="getAvatarUrl(candidate.id)" alt="Profile picture"></v-img>
@@ -25,6 +31,13 @@
         </v-card>
       </v-col>
     </v-row>
+    <!-- controls-->
+    <v-row>
+      <v-col>
+        <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
+      </v-col>
+    </v-row>
+
     <v-card-actions>
       <v-btn color="primary" @click="goBack">Back</v-btn>
     </v-card-actions>
@@ -32,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import RemoteService from '@/services/RemoteService'
 import type CandidateDto from '@/models/candidate/CandidateDto'
 import type FellowshipDto from '@/models/fellowship/FellowshipDto'
@@ -46,6 +59,24 @@ const fellowship = ref<FellowshipDto | null>(null)
 const enrolledCandidates = ref<CandidateDto[]>([])
 const allCandidates = ref<CandidateDto[]>([])
 const fellowshipEnrollments = ref<EnrollmentDto[]>([])
+const searchQuery = ref('')
+const currentPage = ref(1)
+const itemsPerPage = 10
+
+const totalPages = computed(() => Math.ceil(filteredCandidates.value.length / itemsPerPage))
+
+const filteredCandidates = computed(() => {
+  if (searchQuery.value) {
+    return allCandidates.value.filter(candidate => candidate.istId.includes(searchQuery.value))
+  }
+  return allCandidates.value
+})
+
+const paginatedCandidates = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage
+  const end = start + itemsPerPage
+  return filteredCandidates.value.slice(start, end)
+})
 
 async function fetchFellowshipAndCandidates() {
   const fellowshipId = Number(route.params.id)
@@ -62,7 +93,6 @@ async function fetchFellowshipAndCandidates() {
 }
 
 async function enrollCandidate(candidateId: number) {
-  // constructs an enrollmentDto object and sends it to the backend
   const enrollmentDto = {
     motivation: '',
     enrollmentDateTime: new Date().toISOString(),
@@ -72,7 +102,6 @@ async function enrollCandidate(candidateId: number) {
   try {
     if (fellowship.value) {
       const newEnrollment = await RemoteService.enrollCandidate(enrollmentDto)
-      // add the candidate to allCandidates and enrolledCandidates list
       enrolledCandidates.value.push(allCandidates.value.find(candidate => candidate.id === candidateId)!)
       fellowshipEnrollments.value.push(newEnrollment)
     }
@@ -87,9 +116,7 @@ async function unenrollCandidate(candidateId: number) {
       const enrollment = fellowshipEnrollments.value.find(enrollment => enrollment.candidateId === candidateId)
       if (enrollment) {
         await RemoteService.deleteEnrollment(enrollment.id)
-        // remove the candidate from the enrolledCandidates list
         enrolledCandidates.value = enrolledCandidates.value.filter(candidate => candidate.id !== candidateId)
-        // remove the enrollment from the fellowshipEnrollments list
         fellowshipEnrollments.value = fellowshipEnrollments.value.filter(e => e.id !== enrollment.id)
       }
     }
@@ -120,7 +147,7 @@ onMounted(() => {
 function getAvatarUrl(candidateId: string | undefined): string {
   const baseUrl = 'https://ui-avatars.com/api/';
   const defaultText = 'Unknown';
-  const size = 56; // Size of the avatar
+  const size = 56;
   if (candidateId) {
     return `${baseUrl}?name=${candidateId}&size=${size}&background=random`;
   }
