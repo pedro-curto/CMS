@@ -120,16 +120,8 @@ export default class RemoteService {
     })
   }
 
-  static async unenrollCandidate(fellowshipId: number, candidateId: number): Promise<EnrollmentDto> {
-    return httpClient.delete(`/enrollments/unenroll`,
-        { params: { fellowshipId, candidateId}})
-        .then((response) => {
-          return new EnrollmentDto(response.data)
-        })
-  }
-
   static async deleteEnrollment(enrollmentId: number): Promise<EnrollmentDto> {
-    return httpClient.delete(`/enrollments/delete/${enrollmentId}`)
+    httpClient.delete(`/enrollments/delete/${enrollmentId}`)
         .then((response) => {
           return new EnrollmentDto(response.data)
         });
