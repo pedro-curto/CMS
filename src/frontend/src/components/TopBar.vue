@@ -8,7 +8,7 @@ import UtilBar from '@/components/UtilBar.vue'
 import NavBar from '@/components/NavBar.vue'
 
 const navbarItems = [
-  { name: 'Bolsas', path: '/admin', icon: 'mdi-briefcase' },
-  { name: 'Candidatos', path: '/materials', icon: 'mdi-account-group' },
+  { name: 'Fellowships', path: '/fellowships', icon: 'mdi-briefcase' },
+  { name: 'Candidates', path: '/candidates', icon: 'mdi-account-group' },
 ]
 </script>

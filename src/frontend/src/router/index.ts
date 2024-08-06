@@ -1,6 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import MaterialView from '@/views/materials/MaterialView.vue'
+import CandidateView from '@/views/candidate/CandidateView.vue'
+import CandidateDetailsView from '@/views/candidate/CandidateDetailsView.vue'
+import FellowshipView from '@/views/fellowship/FellowshipView.vue'
+import FellowshipDetails from '@/views/fellowship/FellowshipDetails.vue'
+import FellowshipCandidates from '@/views/fellowship/FellowshipCandidatesManagement.vue'
+import CandidateEvaluation from '@/views/fellowship/FellowshipCandidateEvaluation.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,6 +30,39 @@ const router = createRouter({
       path: '/materials',
       name: 'materials',
       component: MaterialView
+    },
+    {
+      path: '/candidates',
+      name: 'candidates',
+      component: CandidateView
+    },
+    {
+      path: '/candidate/:id',
+      name: 'candidateDetails',
+      component: CandidateDetailsView,
+    },
+    {
+      path: '/fellowships',
+      name: 'fellowships',
+      component: FellowshipView
+    },
+    {
+      path: '/fellowship/:id',
+      name: 'fellowshipDetails',
+      component: FellowshipDetails,
+      props: true,
+    },
+    {
+      path:'/fellowship/:id/:candidateId/evaluation',
+      name: 'candidateEvaluation',
+      component: CandidateEvaluation,
+        props: true
+    },
+    {
+      path: '/fellowship/:id/candidateManagement',
+      name: 'fellowshipCandidates',
+      component: FellowshipCandidates,
+      props: true
     },
     {
       path: '/register',

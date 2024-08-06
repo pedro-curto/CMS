@@ -1,9 +1,9 @@
-# DEI Management System - DMS
+# CMS: Candidates Management System
 
 ## Dependencies
 
 - Require download
-  - [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+  - [Java 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
   - [Maven](https://maven.apache.org/download.cgi)
   - [Node 14+](https://nodejs.org/en/) ([Node Version Manager](https://github.com/nvm-sh/nvm) recommended)
   - [Docker](https://www.docker.com/)
@@ -23,7 +23,7 @@ git clone git@gitlab.rnl.tecnico.ulisboa.pt:<REPO>
 Go to the project directory
 
 ```bash
-cd DMS/
+cd dei-cms-pedro-curto/
 ```
 
 ### Database
@@ -48,18 +48,16 @@ docker compose down
 
 ### Backend
 
-Create a copy of the `application-local.properties` file.
+Create a copy of the `application.properties` file.
 
 ```bash
 cp ./backend/src/main/resources/application-local.properties.example ./backend/src/main/resources/application-local.properties
 ```
 
-If you're running your database using Docker, the datasource variables should match the ones in `Docker-compose.yml`.
-
 To build and run the backend, execute the following commands:
 
 ```bash
-cd ./backend
+cd backend
 mvn clean spring-boot:run
 ```
 
@@ -71,7 +69,7 @@ Create a copy of the `example.env` file named `.env`.
 cp ./frontend/example.env ./frontend/.env
 ```
 
-Now, you need to install the dependencies:
+Install the dependencies:
 
 ```bash
 cd ./frontend
@@ -84,12 +82,32 @@ To run the frontend, run the following command:
 npm run dev
 ```
 
-Access http://localhost:8081
+Access http://localhost:5173
 
 ## Access the Database
 
-In order to access the database, you can use the following command:
+In order to access the database, you can use the generic command:
 
 ```bash
-mysql -u root -p<password> -h 127.0.0.1 -P 7654 dmsdb
+psql -h localhost -p <PORT> -U <USER> -d <DB_NAME>
+```
+
+For the current configuration, you can use the specific command:
+
+```bash
+psql -h localhost -p 7654 -U postgres dmsdb
+```
+
+Check [PostgreSQL documentation](https://www.postgresql.org/docs/current/app-psql.html) for useful commands.
+
+### Getting Familiarized with the Project
+
+You can check the documentation folder to see the domain model and a file 
+called `feature_guide.md` with the project's features and implementation decisions.
+
+I added a .sql file to easily populate the database with some data, which makes certain features easier to test. 
+You can run it with the following command, after starting the backend:
+
+```bash
+psql -h localhost -U postgres -p 7654 dmsdb -f backend/src/main/resources/sqlData/bigtest.sql
 ```

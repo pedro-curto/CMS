@@ -1,0 +1,39 @@
+@startuml
+
+' Entities
+class Candidate {
+  +id
+  email: string
+  ist_id: Long
+  name: string
+}
+
+class Fellowship {
+  +id
+  name: string
+  start_date: LocalDate
+  end_date: LocalDate
+  monthly_value: BigDecimal
+  weights: Map<EvaluationCategory, Double>
+  description: string
+  closed: boolean
+  winnerId: Long
+}
+
+class Enrollment {
+  +id
+  enrollment_date_time: LocalDate
+  motivation: string
+}
+
+class Evaluation {
+  +id
+  scores: Map<EvaluationCategory, Double>
+}
+
+' Relationships
+Candidate "1" -- "0..*" Enrollment
+Fellowship "1" -- "0..*" Enrollment
+Enrollment "1" -- "0..1" Evaluation
+
+@enduml
