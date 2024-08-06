@@ -1,12 +1,13 @@
 	package pt.ulisboa.tecnico.rnl.dei.dms.evaluation.domain;
 
 	import jakarta.persistence.*;
-	import jakarta.validation.constraints.NotNull;
 	import lombok.AllArgsConstructor;
 	import lombok.Data;
 	import lombok.NoArgsConstructor;
 	import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain.Enrollment;
+	import pt.ulisboa.tecnico.rnl.dei.dms.error.CMSException;
 	import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.dto.EvaluationDto;
+	import static pt.ulisboa.tecnico.rnl.dei.dms.error.ErrorMessage.*;
 
 	import java.util.EnumMap;
 	import java.util.Map;
@@ -24,7 +25,6 @@
 		private Long id;
 		@OneToOne
 		@JoinColumn(name = "enrollment_id")
-		@NotNull(message = "Enrollment ID is required")
 		private Enrollment enrollment;
 		@ElementCollection
 		// its value must be between 0 and 20
@@ -33,6 +33,7 @@
 		public Evaluation(Enrollment enrollment, EvaluationDto evaluationDto) {
 			setEnrollment(enrollment);
 			this.scores = evaluationDto.getScores();
+			enrollmentNotNull();
 			// checks if the scores are between 0 and 20
 			validateScores();
 		}
@@ -52,10 +53,30 @@
 			return finalScore;
 		}
 
+		private void enrollmentNotNull() {
+			if (enrollment == null) {
+				throw new CMSException(ENROLLMENT_REQUIRED);
+			}
+		}
+
 		private void validateScores() {
+			// guarantee that scores exist
+			if (scores == null) {
+				throw new CMSException(SCORES_REQUIRED);
+			}
+			// scores can't be empty
+			if (scores.isEmpty()) {
+				throw new CMSException(SCORES_CANT_BE_EMPTY);
+			}
+			// all scores categories must be provided
+			for (EvaluationCategory category : EvaluationCategory.values()) {
+				if (!scores.containsKey(category)) {
+					throw new CMSException(INVALID_SCORES_CATEGORIES);
+				}
+			}
 			for (EvaluationCategory category : scores.keySet()) {
 				if (scores.get(category) < 0 || scores.get(category) > 20) {
-					throw new IllegalArgumentException("Scores must be between 0 and 20");
+					throw new CMSException(SCORES_BETWEEN_0_AND_20);
 				}
 			}
 		}

@@ -63,11 +63,7 @@ public class FellowshipService {
     public FellowshipDto updateFellowshipWeights(Long id, Map<String, Double> weights) {
         Fellowship fellowship = fellowshipRepository.findById(id)
                 .orElseThrow(() -> new CMSException(FELLOWSHIP_NOT_FOUND, id));
-        try {
-            fellowship.updateWeights(weights);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        }
+        fellowship.updateWeights(weights);
         fellowshipRepository.save(fellowship);
         return new FellowshipDto(fellowship);
     }

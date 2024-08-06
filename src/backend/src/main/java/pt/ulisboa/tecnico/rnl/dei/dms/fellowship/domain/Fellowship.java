@@ -77,7 +77,7 @@ public class Fellowship {
 		if (weights.containsKey((category))) {
 			weights.put(category, weight);
 		} else {
-			throw new IllegalArgumentException("Category not found");
+			throw new CMSException(CATEGORY_NOT_FOUND);
 		}
 	}
 

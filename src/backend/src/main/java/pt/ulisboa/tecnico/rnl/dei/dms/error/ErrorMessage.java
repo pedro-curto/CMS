@@ -2,6 +2,11 @@ package pt.ulisboa.tecnico.rnl.dei.dms.error;
 
 public enum ErrorMessage {
     // Evaluation
+    ENROLLMENT_REQUIRED("Enrollment ID is required"),
+    SCORES_REQUIRED("Scores are required"),
+    SCORES_CANT_BE_EMPTY("Scores can't be empty"),
+    INVALID_SCORES_CATEGORIES("You must provide scores for all categories: Curriculum, Interview, Exercise"),
+    SCORES_BETWEEN_0_AND_20("Scores must be between 0 and 20"),
    ENROLLMENT_NOT_FOUND("Enrollment with id %s not found"),
 
     EVALUATION_NOT_FOUND("Evaluation for enrollment id %s not found"),
@@ -22,6 +27,7 @@ public enum ErrorMessage {
     FELLOWSHIP_VALUE_MIN("Fellowship value must be greater than 0"),
    FELLOWSHIP_NOT_FOUND("Fellowship with id %s not found"),
     START_DATE_BEFORE_END_DATE("Start date must be before end date"),
+    CATEGORY_NOT_FOUND("Category not found"),
     WRONG_WEIGHTS_SUM("Weights sum must be 1. Sum: %s"),
     // Candidate
     CANDIDATE_NOT_FOUND("Candidate with id %s not found"),
