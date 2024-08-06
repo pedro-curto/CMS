@@ -85,12 +85,25 @@ public class EvaluationService {
 		if (enrollments.isEmpty()) {
 			throw new CMSException(NO_ENROLLMENTS_FOUND);
 		}
-		Enrollment winner = enrollments.stream()
-						.max((e1, e2) -> Double.compare(
-								evaluationRepository.getEvaluationByEnrollmentId(e1.getId()).calculateFinalScore(),
-								evaluationRepository.getEvaluationByEnrollmentId(e2.getId()).calculateFinalScore()
-						))
-						.orElseThrow(() -> new CMSException(NO_WINNER_FOUND));
+		Double highestScore = 0.0;
+		Enrollment winner = null;
+		for (Enrollment enrollment : enrollments) {
+			// all candidates must be evaluated
+			if (!evaluationRepository.existsByEnrollmentId(enrollment.getId())) {
+				throw new CMSException(EVALUATION_NOT_FOUND, enrollment.getId());
+			}
+			// gets maximum score
+			Evaluation evaluation = evaluationRepository.getEvaluationByEnrollmentId(enrollment.getId());
+			Double finalScore = evaluation.calculateFinalScore();
+			if (finalScore > highestScore) {
+				highestScore = finalScore;
+				winner = enrollment;
+			}
+		}
+		if (winner == null) {
+			throw new CMSException(NO_WINNER_FOUND);
+		}
+
 		System.out.println("Winner: " + winner.getCandidate().getName());
 		return new CandidateDto(winner.getCandidate());
 	}
