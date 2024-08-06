@@ -51,7 +51,7 @@ docker compose down
 Create a copy of the `application.properties` file.
 
 ```bash
-cp ./backend/src/main/resources/application-local.properties.example ./backend/src/main/resources/application-local.properties
+cp ./backend/src/main/resources/application.properties.example ./backend/src/main/resources/application.properties
 ```
 
 To build and run the backend, execute the following commands:
