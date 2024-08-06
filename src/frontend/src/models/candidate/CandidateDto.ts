@@ -1,6 +1,6 @@
 export default class CandidateDto {
     id: number | null = null;
-    istId?: string
+    istId?: number
     name?: string
     email?: string
 

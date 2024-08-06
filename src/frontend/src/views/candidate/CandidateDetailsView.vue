@@ -16,7 +16,7 @@
             </v-avatar>
             {{ candidate.name }}
           </v-card-title>
-          <v-card-subtitle class="text-h6 mb-4">{{ candidate.istId }}</v-card-subtitle>
+          <v-card-subtitle class="text-h6 mb-4">IST{{ candidate.istId }}</v-card-subtitle>
           <v-divider></v-divider>
           <v-card-text>
             <v-row>

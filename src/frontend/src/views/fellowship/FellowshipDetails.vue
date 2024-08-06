@@ -64,7 +64,7 @@
             </v-avatar>
             <span>{{ candidate.name }}</span>
           </v-card-title>
-          <v-card-subtitle>{{ candidate.istId }}</v-card-subtitle>
+          <v-card-subtitle>IST{{ candidate.istId }}</v-card-subtitle>
           <v-card-text>
             <v-chip color="primary" text-color="white">{{ candidate.email }}</v-chip>
           </v-card-text>
@@ -113,7 +113,7 @@
                   <v-row align="center" justify="center">
                     <v-col cols="auto" class="text-center">
                       <div class="text-h5">{{ fellowshipWinner?.name }}</div>
-                      <div class="text-subtitle-1">{{ fellowshipWinner?.istId }}</div>
+                      <div class="text-subtitle-1">IST{{ fellowshipWinner?.istId }}</div>
                       <div class="text-body-1">{{ fellowshipWinner?.email }}</div>
                       <div class="text-h6 mt-4">Final Grade: {{ finalGrade !== null ? finalGrade.toFixed(2) : 'N/A' }}</div>
                     </v-col>

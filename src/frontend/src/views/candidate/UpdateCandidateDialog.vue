@@ -58,8 +58,8 @@ const candidate = ref<CandidateDto>({
 const emit = defineEmits(['candidate-updated', 'dialog-close'])
 
 const istIdRules = [
-  (v: string) => !!v || 'IstID is required',
-  (v: string) => v.length > 0 || 'IstID must not be blank'
+  (v: number) => !!v || 'IstID is required',
+  (v: number) => v > 0 || 'IstID must be a positive number'
 ]
 
 const nameRules = [
@@ -82,9 +82,13 @@ const closeDialog = () => {
 
 const submitForm = async () => {
   if (form.value && form.value.validate()) {
-    await RemoteService.updateCandidate(candidate.value.id, candidate.value)
-    emit('candidate-updated')
-    closeDialog()
+    try {
+      await RemoteService.updateCandidate(candidate.value.id, candidate.value)
+      emit('candidate-updated')
+      closeDialog()
+    } catch (error) {
+      alert(error.response.data.message)
+    }
   }
 }
 

@@ -72,8 +72,8 @@ const newCandidate = reactive<CandidateDto>({
 })
 
 const istIdRules = [
-  (v: string) => !!v || 'IstID is required',
-  (v: string) => v.length > 0 || 'IstID must not be blank'
+  (v: number) => !!v || 'IstID is required',
+  (v: number) => v > 0 || 'IstID must be a positive number'
 ]
 
 const nameRules = [
@@ -102,10 +102,14 @@ const closeDialog = () => {
 
 const submitForm = async () => {
   if (form.value && form.value.validate()) {
-    await RemoteService.addCandidate(newCandidate)
-    dialog.value = false
-    emit('candidate-created')
-    resetForm()
+    try {
+      await RemoteService.addCandidate(newCandidate)
+      dialog.value = false
+      emit('candidate-created')
+      resetForm()
+    } catch (error) {
+      alert(error.response.data.message)
+    }
   }
 }
 </script>

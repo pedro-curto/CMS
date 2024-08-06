@@ -24,6 +24,9 @@
       :custom-filter="fuzzySearch"
       class="text-left"
   >
+    <template v-slot:[`item.istId`]="{ item }">
+      <span>IST{{ item.istId }}</span>
+    </template>
     <template v-slot:[`item.actions`]="{ item }">
       <v-icon @click="openCandidateDetails(item)" class="mr-2">mdi-eye</v-icon>
       <v-icon @click="openUpdateDialog(item)" class="mr-2">mdi-pencil</v-icon>

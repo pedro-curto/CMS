@@ -16,7 +16,7 @@
             </v-avatar>
             <span>{{ candidate.name }}</span>
           </v-card-title>
-          <v-card-subtitle>{{ candidate.istId }}</v-card-subtitle>
+          <v-card-subtitle>IST{{ candidate.istId }}</v-card-subtitle>
           <v-card-text>
             <v-chip color="primary" text-color="white">{{ candidate.email }}</v-chip>
           </v-card-text>
