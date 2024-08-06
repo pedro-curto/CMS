@@ -19,6 +19,11 @@ public enum ErrorMessage {
     // Candidate
 
     CANDIDATE_NOT_FOUND("Candidate with id %s not found"),
+    IST_ID_REQUIRED("IST ID is required"),
+    IST_ID_ALREADY_EXISTS("IST ID %s already exists"),
+    NAME_REQUIRED("Name is required"),
+    EMAIL_REQUIRED("Email is required"),
+    INVALID_EMAIL("Invalid email: %s"),
 
     // Enrollment
 

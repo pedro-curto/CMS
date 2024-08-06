@@ -10,6 +10,7 @@ import pt.ulisboa.tecnico.rnl.dei.dms.error.CMSException;
 import static pt.ulisboa.tecnico.rnl.dei.dms.error.ErrorMessage.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +36,11 @@ public class CandidateService {
 
     @Transactional
     public CandidateDto addCandidate(CandidateDto candidateDto) {
+        // checks if istID already exists
+        Optional<Candidate> candidateCheck = candidateRepository.findByIstId(candidateDto.getIstId());
+        if (candidateCheck.isPresent()) {
+            throw new CMSException(IST_ID_ALREADY_EXISTS, candidateDto.getIstId());
+        }
         Candidate candidate = new Candidate(candidateDto);
         candidateRepository.save(candidate);
         return new CandidateDto(candidate);
@@ -44,6 +50,11 @@ public class CandidateService {
     public CandidateDto updateCandidate(Long id, CandidateDto candidateDto) {
         Candidate candidate = candidateRepository.findById(id)
                 .orElseThrow(() -> new CMSException(CANDIDATE_NOT_FOUND, id));
+        // checks if istID already exists and if it is different from the current candidate
+        Optional<Candidate> candidateCheck = candidateRepository.findByIstId(candidateDto.getIstId());
+        if (candidateCheck.isPresent() && !candidateCheck.get().getId().equals(id)) {
+            throw new CMSException(IST_ID_ALREADY_EXISTS, candidateDto.getIstId());
+        }
         candidate.update(candidateDto);
         candidateRepository.save(candidate);
         return new CandidateDto(candidate);

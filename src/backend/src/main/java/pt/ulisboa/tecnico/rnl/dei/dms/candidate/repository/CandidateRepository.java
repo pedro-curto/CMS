@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface CandidateRepository extends JpaRepository<Candidate, Long> {
-	Optional<Candidate> findByIstId(String istId);
+	Optional<Candidate> findByIstId(Long istId);
 }

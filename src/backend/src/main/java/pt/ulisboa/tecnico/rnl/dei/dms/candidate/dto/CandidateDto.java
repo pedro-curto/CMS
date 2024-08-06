@@ -10,15 +10,11 @@ import pt.ulisboa.tecnico.rnl.dei.dms.candidate.domain.Candidate;
 @NoArgsConstructor
 public class CandidateDto {
 	private Long id;
-	@NotBlank
-	private String istId;
-	@NotBlank
+	private Long istId;
 	private String name;
-	@NotBlank
-	@Email
 	private String email;
 
-	public CandidateDto(String istId, String name, String email) {
+	public CandidateDto(Long istId, String name, String email) {
 		this.istId = istId;
 		this.name = name;
 		this.email = email;
