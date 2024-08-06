@@ -15,6 +15,18 @@
             {{ fellowship.name }}
           </v-card-title>
           <v-card-subtitle class="text-h6 mb-4">{{ fellowship.description }}</v-card-subtitle>
+          <v-row>
+            <v-col>
+              <h2 class="text-center">Evaluation Weights</h2>
+              <v-row justify="center">
+                <v-col cols="auto" v-for="(weight, category) in evaluationWeights" :key="category">
+                  <v-chip color="green" text-color="white" class="ma-2">
+                    {{ category }}: {{ (weight * 100).toFixed(2) }}%
+                  </v-chip>
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
           <v-divider></v-divider>
           <v-card-text>
             <v-row>
@@ -45,6 +57,15 @@
       </v-col>
     </v-row>
 
+    <!-- closed alert -->
+    <v-row v-if="fellowship?.closed">
+      <v-col>
+        <v-alert type="info" class="text-center">
+          This fellowship is closed.
+        </v-alert>
+      </v-col>
+    </v-row>
+
     <!-- Enrolled Candidates Section -->
     <v-row>
       <v-col v-if="enrolledCandidates.length">
@@ -53,7 +74,6 @@
       <v-col v-else>
         <h1 class="text-center">No candidates enrolled yet</h1>
       </v-col>
-
     </v-row>
     <v-row>
       <v-col v-if="!loading" v-for="candidate in enrolledCandidates" :key="candidate.id" cols="12" sm="6" md="4">
@@ -63,25 +83,25 @@
               <v-img :src="getAvatarUrl(candidate.id)" alt="Profile picture"></v-img>
             </v-avatar>
             <span>{{ candidate.name }}</span>
+            <v-chip v-if="fellowship?.closed && candidate.id === fellowship.winnerId" color="green" text-color="white" class="ml-2">
+              Winner
+            </v-chip>
           </v-card-title>
           <v-card-subtitle>IST{{ candidate.istId }}</v-card-subtitle>
           <v-card-text>
             <v-chip color="primary" text-color="white">{{ candidate.email }}</v-chip>
           </v-card-text>
           <v-card-actions>
-            <v-btn
-                  color="primary"
-                 @click="goToEvaluationPage(candidate.id)">View Evaluation
-            </v-btn>
+            <v-btn color="primary" @click="goToEvaluationPage(candidate.id)">View Evaluation</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
     <v-card-actions>
       <v-btn color="primary" @click="goBack">Back</v-btn>
-      <v-btn color="secondary" @click="goToCandidatesPage">Manage All Candidates</v-btn>
+      <v-btn v-if="!fellowship?.closed" color="secondary" @click="goToCandidatesPage">Manage All Candidates</v-btn>
     </v-card-actions>
-    <v-row v-if="evaluationWeights">
+    <v-row v-if="evaluationWeights && !fellowship?.closed">
       <v-col>
         <v-card class="pa-6" outlined>
           <v-card-text>
@@ -131,18 +151,19 @@
       </v-col>
     </v-row>
 
-  <v-dialog v-model="weightsDialog" max-width="1000">
-    <EditWeightsDialog
-        v-if="fellowship"
-        :fellowshipId="fellowship.id"
-        @dialog-close="closeWeightsDialog"
-    />
-  </v-dialog>
+    <v-dialog v-model="weightsDialog" max-width="1000">
+      <EditWeightsDialog
+          v-if="fellowship"
+          :fellowshipId="fellowship.id"
+          @dialog-close="closeWeightsDialog"
+          @weights-updated="updateEvaluationWeights"
+      />
+    </v-dialog>
   </v-container>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import RemoteService from '@/services/RemoteService'
 import type FellowshipDto from '@/models/fellowship/FellowshipDto'
@@ -216,6 +237,10 @@ function closeWeightsDialog() {
   weightsDialog.value = false
 }
 
+function updateEvaluationWeights(newWeights: { [key: string]: number }) {
+  evaluationWeights.value = newWeights
+}
+
 async function selectFellowshipWinner() {
   try {
     fellowshipWinner.value = await RemoteService.getFellowshipWinner(fellowship.value.id)
@@ -223,6 +248,7 @@ async function selectFellowshipWinner() {
     const enrollmentId = await RemoteService.getEnrollmentId(fellowship.value.id, fellowshipWinner.value!.id)
     finalGrade.value = await RemoteService.getCandidateFinalEvaluation(enrollmentId)
     winnerDialog.value = true
+    fellowship.value.winnerId = fellowshipWinner.value!.id
   } catch (err) {
     error.value = 'Failed to fetch evaluation weights.'
     console.error(err)
@@ -234,6 +260,12 @@ function closeWinnerDialog() {
   winnerDialog.value = false
 }
 
+watch(winnerDialog, (newVal) => {
+  if (!newVal) {
+    window.location.reload()
+  }
+})
+
 function getAvatarUrl(candidateId: string | undefined): string {
   const baseUrl = 'https://ui-avatars.com/api/';
   const defaultText = 'Unknown';
@@ -244,10 +276,3 @@ function getAvatarUrl(candidateId: string | undefined): string {
   return `${baseUrl}?name=${defaultText}&size=${size}&background=random`;
 }
 </script>
-
-<style scoped>
-.candidate-card {
-  cursor: pointer;
-  transition: box-shadow 0.3s ease;
-}
-</style>

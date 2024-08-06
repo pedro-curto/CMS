@@ -26,7 +26,7 @@
   >
     <template v-slot:[`item.actions`]="{ item }">
       <v-icon @click="openDetailsDialog(item)" class="mr-2">mdi-eye</v-icon>
-      <v-icon @click="openCandidatesPage(item)" class="mr-2">mdi-account-group</v-icon>
+      <v-icon v-if="!item?.closed"  @click="openCandidatesPage(item)" class="mr-2">mdi-account-group</v-icon>
       <v-icon @click="openUpdateDialog(item)" class="mr-2">mdi-pencil</v-icon>
       <v-icon @click="deleteFellowship(item)" class="mr-2">mdi-delete</v-icon>
     </template>

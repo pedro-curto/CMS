@@ -42,7 +42,7 @@ import {ref, watch, onMounted, computed} from 'vue';
 import RemoteService from '@/services/RemoteService';
 
 const props = defineProps<{ fellowshipId: number }>();
-const emit = defineEmits(['dialog-close']);
+const emit = defineEmits(['dialog-close', 'weights-updated']);
 
 const dialogVisible = ref(true);
 const valid = ref(false);
@@ -68,6 +68,7 @@ const updateWeights = async () => {
   try {
     await RemoteService.updateFellowshipWeights(props.fellowshipId, weights.value);
     alert('Weights updated successfully');
+    emit('weights-updated', weights.value);
     closeDialog();
   } catch (error) {
     console.error('Failed to update weights', error);

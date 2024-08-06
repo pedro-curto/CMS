@@ -8,7 +8,7 @@
 
     <v-row>
       <v-col>
-        <v-text-field v-model="searchQuery" label="Search by IST ID" clearable></v-text-field>
+        <v-text-field v-model="searchQuery" label="Search by Name" clearable></v-text-field>
       </v-col>
     </v-row>
 
@@ -26,8 +26,8 @@
           <v-card-text>
             <v-chip color="primary" text-color="white">{{ candidate.email }}</v-chip>
           </v-card-text>
-          <v-btn v-if="!isEnrolled(candidate.id)" color="success" @click="enrollCandidate(candidate.id)">Enroll</v-btn>
-          <v-btn v-if="isEnrolled(candidate.id)" color="error" @click="unenrollCandidate(candidate.id)">Unenroll</v-btn>
+          <v-btn v-if="!isEnrolled(candidate.id) && !fellowship.closed" color="success" @click.stop="enrollCandidate(candidate.id)">Enroll</v-btn>
+          <v-btn v-if="isEnrolled(candidate.id) && !fellowship.closed" color="error" @click.stop="unenrollCandidate(candidate.id)">Unenroll</v-btn>
         </v-card>
       </v-col>
     </v-row>
@@ -67,7 +67,7 @@ const totalPages = computed(() => Math.ceil(filteredCandidates.value.length / it
 
 const filteredCandidates = computed(() => {
   if (searchQuery.value) {
-    return allCandidates.value.filter(candidate => candidate.istId.includes(searchQuery.value))
+    return allCandidates.value.filter(candidate => candidate.name.toString().includes(searchQuery.value))
   }
   return allCandidates.value
 })

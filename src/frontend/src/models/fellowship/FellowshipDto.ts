@@ -7,6 +7,8 @@ export default class FellowshipDto {
     startDate?: string
     endDate?: string
     monthlyValue?: number
+    closed?: boolean
+    winnerId?: number
     candidates?: Candidate[] = []
 
     constructor(jsonObj: Partial<FellowshipDto>) {

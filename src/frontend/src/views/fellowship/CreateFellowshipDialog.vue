@@ -104,6 +104,7 @@ const form = ref(null)
 const emit = defineEmits(['fellowship-created'])
 const newFellowship = reactive<FellowshipDto>({
   name: '',
+  description: '',
   startDate: '',
   endDate: '',
   monthlyValue: ''
@@ -137,6 +138,7 @@ watch(dialog, (newVal) => {
 
 const resetFellowship = () => {
   newFellowship.name = ''
+  newFellowship.description = ''
   newFellowship.startDate = ''
   newFellowship.endDate = ''
   newFellowship.monthlyValue = ''
