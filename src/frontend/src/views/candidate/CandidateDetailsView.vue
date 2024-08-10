@@ -52,7 +52,7 @@
           </v-card-title>
           <v-card-subtitle>{{ fellowship.startDate }} - {{ fellowship.endDate }}</v-card-subtitle>
           <v-card-text>
-            <v-chip color="primary" text-color="white">{{ fellowship.monthlyValue.toLocaleString('en-US', { style: 'currency', currency: 'EUR' }) }}</v-chip>
+            <v-chip color="primary" text-color="white">{{ fellowship.monthlyValue?.toLocaleString('en-US', { style: 'currency', currency: 'EUR' }) }}</v-chip>
           </v-card-text>
         </v-card>
       </v-col>

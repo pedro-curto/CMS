@@ -32,11 +32,6 @@ public class EvaluationController {
 		return evaluationService.getEvaluationDetails(enrollmentId);
 	}
 
-	@GetMapping("/getCategories")
-	public List<EvaluationCategory> getEvaluationCategories() {
-		return evaluationService.getEvaluationCategories();
-	}
-
 	@GetMapping("/getWeights/{fellowshipId}")
 	public Map<EvaluationCategory, Double> getEvaluationWeights(@PathVariable Long fellowshipId) {
 		return evaluationService.getEvaluationWeights(fellowshipId);

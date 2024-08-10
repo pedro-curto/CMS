@@ -3,18 +3,17 @@ package pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.error.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.domain.EvaluationCategory;
+import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.repository.EvaluationCategoryRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto.FellowshipDto;
 import static pt.ulisboa.tecnico.rnl.dei.dms.error.ErrorMessage.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Entity
 @Table(name = "fellowship")
@@ -34,7 +33,7 @@ public class Fellowship {
 	@OneToMany(mappedBy = "fellowship", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Enrollment> enrollments = new ArrayList<>();
 	@ElementCollection
-	private Map<EvaluationCategory, Double> weights = new EnumMap<>(EvaluationCategory.class);
+	private Map<EvaluationCategory, Double> weights = new HashMap<>();
 
 	public Fellowship(String name, String description, LocalDate startDate, LocalDate endDate, BigDecimal monthlyValue) {
 		this.name = name;
@@ -42,7 +41,6 @@ public class Fellowship {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.monthlyValue = monthlyValue;
-		// if weights are provided, use them; else, use default weights
 		this.weights = initializeDefaultWeights();
 	}
 
@@ -52,8 +50,7 @@ public class Fellowship {
 		this.startDate = fellowshipDto.getStartDate();
 		this.endDate = fellowshipDto.getEndDate();
 		this.monthlyValue = fellowshipDto.getMonthlyValue();
-		this.weights = fellowshipDto.getWeights() != null ? fellowshipDto.getWeights()
-				: initializeDefaultWeights();
+		this.weights = fellowshipDto.getWeights() != null ? fellowshipDto.getWeights() : initializeDefaultWeights();
 		verifyInvariants();
 		validateDates();
 		verifyWeights();
@@ -68,38 +65,32 @@ public class Fellowship {
 	}
 
 	private Map<EvaluationCategory, Double> initializeDefaultWeights() {
-		Map<EvaluationCategory, Double> defaultWeights = new EnumMap<>(EvaluationCategory.class);
-		defaultWeights.put(EvaluationCategory.Curriculum, 0.5);
-		defaultWeights.put(EvaluationCategory.Interview, 0.3);
-		defaultWeights.put(EvaluationCategory.Exercise, 0.2);
+		// initializes three default categories (Curriculum, Interview, Exercise) and gives them weights
+		Map<EvaluationCategory, Double> defaultWeights = new HashMap<>();
+		EvaluationCategory curriculum = new EvaluationCategory("Curriculum");
+		EvaluationCategory exercise = new EvaluationCategory("Exercise");
+		EvaluationCategory interview = new EvaluationCategory("Interview");
+		defaultWeights.put(curriculum, 0.3);
+		defaultWeights.put(exercise, 0.3);
+		defaultWeights.put(interview, 0.4);
 		return defaultWeights;
 	}
 
 	public void updateWeight(EvaluationCategory category, Double weight) {
-		if (weights.containsKey((category))) {
+		if (weights.containsKey(category)) {
 			weights.put(category, weight);
 		} else {
 			throw new CMSException(CATEGORY_NOT_FOUND);
 		}
 	}
 
-	public void updateWeights(Map<String, Double> weights) {
-		for (Map.Entry<String, Double> entry : weights.entrySet()) {
-			EvaluationCategory category = EvaluationCategory.valueOf(entry.getKey());
-			updateWeight(category, entry.getValue());
-		}
-		verifyWeights();
-	}
-
 	public void update(FellowshipDto fellowshipDto) {
-		// validate fellowshipDto
 		setName(fellowshipDto.getName());
 		setDescription(fellowshipDto.getDescription());
 		setStartDate(fellowshipDto.getStartDate());
 		setEndDate(fellowshipDto.getEndDate());
 		setMonthlyValue(fellowshipDto.getMonthlyValue());
-		setWeights(fellowshipDto.getWeights() != null ? fellowshipDto.getWeights()
-				: initializeDefaultWeights());
+		setWeights(fellowshipDto.getWeights() != null ? fellowshipDto.getWeights() : initializeDefaultWeights());
 		verifyInvariants();
 		validateDates();
 		verifyWeights();

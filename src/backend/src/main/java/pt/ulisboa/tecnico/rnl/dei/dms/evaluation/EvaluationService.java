@@ -59,11 +59,6 @@ public class EvaluationService {
 	}
 
 	@Transactional
-	public List<EvaluationCategory> getEvaluationCategories() {
-		return List.of(EvaluationCategory.values());
-	}
-
-	@Transactional
 	public Map<EvaluationCategory, Double> getEvaluationWeights(Long fellowshipId) {
 		// weights belong to the fellowship itself, not to the evaluation
 		Fellowship fellowship = fellowshipRepository.findById(fellowshipId)

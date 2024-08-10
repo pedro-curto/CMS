@@ -23,21 +23,15 @@ public class CMSException extends RuntimeException {
 		this.errorMessage = errorMessage;
 	}
 
-	public CMSException(ErrorMessage errorMessage, String value1, String value2) {
-		super(String.format(errorMessage.label, value1, value2));
-		logger.error(String.format(errorMessage.label, value1, value2));
-		this.errorMessage = errorMessage;
-	}
-
 	public CMSException(ErrorMessage errorMessage, Long value) {
 		super(String.format(errorMessage.label, value));
 		logger.error(String.format(errorMessage.label, value));
 		this.errorMessage = errorMessage;
 	}
 
-	public CMSException(ErrorMessage errorMessage, Long value1, Long value2) {
-		super(String.format(errorMessage.label, value1, value2));
-		logger.error(String.format(errorMessage.label, value1, value2));
+	public CMSException(ErrorMessage errorMessage, double sum) {
+		super(String.format(errorMessage.label, sum));
+		logger.error(String.format(errorMessage.label, sum));
 		this.errorMessage = errorMessage;
 	}
 

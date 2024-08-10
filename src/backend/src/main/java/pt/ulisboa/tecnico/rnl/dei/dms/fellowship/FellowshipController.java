@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.rnl.dei.dms.fellowship;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.domain.EvaluationCategory;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto.FellowshipDto;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public class FellowshipController {
     }
 
     @PutMapping("/updateWeights/{id}")
-    public FellowshipDto updateFellowshipWeights(@PathVariable Long id, @RequestBody Map<String, Double> weights) {
+    public FellowshipDto updateFellowshipWeights(@PathVariable Long id, @RequestBody Map<EvaluationCategory, Double> weights) {
         return fellowshipService.updateFellowshipWeights(id, weights);
     }
 

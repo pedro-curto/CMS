@@ -7,6 +7,7 @@ import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.domain.Evaluation;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.domain.EvaluationCategory;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 @Data
@@ -15,7 +16,7 @@ import java.util.Map;
 public class EvaluationDto {
 	private Long id;
 	private Long enrollmentId;
-	private Map<EvaluationCategory, Double> scores = new EnumMap<>(EvaluationCategory.class);
+	private Map<EvaluationCategory, Double> scores = new HashMap<>();
 
 	public EvaluationDto(Evaluation evaluation) {
 		this.id = evaluation.getId();
