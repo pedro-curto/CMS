@@ -46,6 +46,12 @@ Click on the "Change Evaluation Weights" button to **change the weights** for ea
 This page shows all existing candidates and their basic info, and you can either enroll or unenroll them in the fellowship by clicking on the available
 button (either **"Enroll"** or **"Unenroll"**).
 
+## Future changes
+These are some changes that I want to eventually implement:
+- Since evaluation categories can be added or removed from a fellowship,
+guarantee that any evaluation that was previously made is still valid
+
+
 ## Implementation Decisions
 Given the described features to be implemented, I decided to create a fellowship and candidate class for evident reasons.
 
