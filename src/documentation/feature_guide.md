@@ -39,8 +39,10 @@ Here, you can:
 #### Evaluate candidates
 For any candidate, click on the "View Evaluation" button to evaluate the candidate; if the evaluation was already made,
 you can see the **grade for each category** and the **final grade** (all between 0 and 20).
+You can also edit the evaluation by clicking on the "Edit Evaluation" button.
 #### Change the evaluation weights
 Click on the "Change Evaluation Weights" button to **change the weights** for each evaluation category (value between 0 and 1, total sum of 1).
+You can also **add or remove evaluation categories** for this particular fellowship.
 
 ### Fellowship candidate management page
 This page shows all existing candidates and their basic info, and you can either enroll or unenroll them in the fellowship by clicking on the available

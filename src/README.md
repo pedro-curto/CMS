@@ -17,13 +17,13 @@
 Clone the project
 
 ```bash
-git clone git@gitlab.rnl.tecnico.ulisboa.pt:<REPO>
+git clone git@github.com:pedro-curto/CMS.git
 ```
 
 Go to the project directory
 
 ```bash
-cd dei-cms-pedro-curto/
+cd src/
 ```
 
 ### Database
@@ -100,7 +100,7 @@ psql -h localhost -p 7654 -U postgres dmsdb
 
 Check [PostgreSQL documentation](https://www.postgresql.org/docs/current/app-psql.html) for useful commands.
 
-### Getting Familiarized with the Project
+## Getting Familiarized with the Project
 
 You can check the documentation folder to see the domain model and a file 
 called `feature_guide.md` with the project's features and implementation decisions.
@@ -110,4 +110,10 @@ You can run it with the following command, after starting the backend:
 
 ```bash
 psql -h localhost -U postgres -p 7654 dmsdb -f backend/src/main/resources/sqlData/bigtest.sql
+```
+
+You can also use other files, such as `candidate.sql`:
+    
+```bash 
+psql -h localhost -U postgres -p 7654 dmsdb -f backend/src/main/resources/sqlData/candidate.sql
 ```
