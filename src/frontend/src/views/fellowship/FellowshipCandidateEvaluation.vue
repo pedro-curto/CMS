@@ -18,11 +18,24 @@
                 <v-col v-for="(score, category) in evaluation.scores" :key="category" cols="12" sm="6" md="4">
                   <v-card class="pa-4" outlined>
                     <div class="text-h6">{{ category }}</div>
-                    <div class="text-body-1">{{ formatNumber(score) }}</div>
+                    <div v-if="!isEditing" class="text-body-1">{{ formatNumber(score) }}</div>
+                    <v-text-field
+                        v-else
+                        v-model="editableScores[category]"
+                        :label="`${category} Score`"
+                        :rules="scoreRules"
+                        required
+                    ></v-text-field>
                   </v-card>
                 </v-col>
               </v-row>
             </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn v-if="!isEditing && !isFellowshipClosed" color="primary" @click="startEditing">Edit</v-btn>
+              <v-btn v-else-if="!isFellowshipClosed" color="primary" @click="saveChanges">Save</v-btn>
+              <v-btn v-if="isEditing && !isFellowshipClosed" text @click="cancelEditing">Cancel</v-btn>
+            </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
@@ -102,6 +115,9 @@ const newEvaluation = ref<EvaluationDto>({
   enrollmentId: null,
   scores: {}
 })
+const isEditing = ref(false)
+const editableScores = ref<{ [key: string]: number }>({})
+const isFellowshipClosed = ref(false)
 
 // validation rules
 const scoreRules = [
@@ -113,6 +129,7 @@ onMounted(async () => {
   try {
     enrollmentId.value = await RemoteService.getEnrollmentId(fellowshipId, candidateId)
     candidate.value = await RemoteService.getCandidateById(candidateId)
+    isFellowshipClosed.value = await RemoteService.isFellowshipClosed(fellowshipId)
     try {
       evaluation.value = await RemoteService.getEvaluationDetails(enrollmentId.value)
       console.log("EVALUATION: " + JSON.stringify(evaluation.value))
@@ -126,6 +143,28 @@ onMounted(async () => {
   }
 })
 
+function startEditing() {
+  isEditing.value = true
+  editableScores.value = { ...evaluation.value!.scores }
+}
+
+function cancelEditing() {
+  isEditing.value = false
+  editableScores.value = {}
+}
+
+async function saveChanges() {
+  try {
+    evaluation.value!.scores = { ...editableScores.value }
+    await RemoteService.updateEvaluation(evaluation.value!)
+    evaluation.value = await RemoteService.getEvaluationDetails(enrollmentId.value)
+    finalResult.value = await RemoteService.getCandidateFinalEvaluation(enrollmentId.value)
+    isEditing.value = false
+  } catch (err) {
+    console.error('Failed to save changes:', err)
+  }
+}
+
 async function submitEvaluation() {
   try {
     console.log("NEW EVALUATION: " + JSON.stringify(newEvaluation.value))
@@ -138,7 +177,10 @@ async function submitEvaluation() {
 }
 
 function formatNumber(value: number | null): string {
-  return value !== null ? value.toFixed(2) : 'N/A'
+  if (typeof value === 'number') {
+    return value.toFixed(2);
+  }
+  return 'N/A';
 }
 
 function goBack() {

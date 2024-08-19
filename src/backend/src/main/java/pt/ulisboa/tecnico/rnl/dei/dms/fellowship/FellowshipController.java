@@ -45,4 +45,9 @@ public class FellowshipController {
         return fellowshipService.updateFellowshipWeights(id, weights);
     }
 
+    @GetMapping("/isClosed/{id}")
+    public boolean isClosed(@PathVariable Long id) {
+        return fellowshipService.isClosed(id);
+    }
+
 }

@@ -99,4 +99,12 @@ public class FellowshipService {
         fellowshipRepository.save(fellowship);
         return new FellowshipDto(fellowship);
     }
+
+    @Transactional
+    public boolean isClosed(Long id) {
+        Fellowship fellowship = fellowshipRepository.findById(id)
+                .orElseThrow(() -> new CMSException(FELLOWSHIP_NOT_FOUND, id));
+        return fellowship.isClosed();
+    }
+
 }

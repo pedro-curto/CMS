@@ -113,6 +113,12 @@ export default class RemoteService {
     });
   }
 
+  static async isFellowshipClosed(fellowshipId: number): Promise<boolean> {
+    return httpClient.get(`/fellowships/isClosed/${fellowshipId}`).then((response) => {
+      return response.data
+    });
+  }
+
   // ------------------- Enrollments -------------------
 
   static async enrollCandidate(enrollmentDto: EnrollmentDto): Promise<EnrollmentDto> {
@@ -164,6 +170,12 @@ export default class RemoteService {
 
   static async createEvaluation(evaluation: EvaluationDto): Promise<EvaluationDto> {
     return httpClient.post('/evaluations/create', evaluation).then((response) => {
+      return new EvaluationDto(response.data)
+    })
+  }
+
+  static async updateEvaluation(evaluation: EvaluationDto): Promise<EvaluationDto> {
+    return httpClient.put('/evaluations/update', evaluation).then((response) => {
       return new EvaluationDto(response.data)
     })
   }

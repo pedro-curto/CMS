@@ -19,7 +19,7 @@
 
   <v-data-table
       :headers="headers"
-      :items="fellowships"
+      :items="computedFellowships"
       :search="search"
       :custom-filter="fuzzySearch"
       class="text-left"
@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, onUnmounted } from 'vue'
+import {ref, reactive, onMounted, onUnmounted, computed} from 'vue'
 import RemoteService from '@/services/RemoteService'
 import type FellowshipDto from '@/models/fellowship/FellowshipDto'
 import CreateFellowshipDialog from '@/views/fellowship/CreateFellowshipDialog.vue'
@@ -57,12 +57,19 @@ const headers = [
   { title: 'Start Date', value: 'startDate', key: 'startDate' },
   { title: 'End Date', value: 'endDate', key: 'endDate' },
   { title: 'Monthly Value', value: 'monthlyValue', key: 'monthlyValue' },
+  { title: 'Active', value: 'active', key: 'active' },
   { title: 'Actions', value: 'actions', key: 'actions' }
 ]
 
 const fellowships: FellowshipDto[] = reactive([])
 const dialog = ref(false)
 const selectedFellowship = ref<FellowshipDto | null>(null)
+const computedFellowships = computed(() => {
+  return fellowships.map(fellowship => ({
+    ...fellowship,
+    active: fellowship.closed ? 'No' : 'Yes'
+  }))
+})
 
 async function fetchFellowships() {
   const data = await RemoteService.getFellowships()

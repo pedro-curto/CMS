@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidate.dto.CandidateDto;
-import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.domain.EvaluationCategory;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.dto.EvaluationDto;
 
 import java.util.List;
@@ -22,6 +21,11 @@ public class EvaluationController {
 		return evaluationService.createEvaluation(evaluationDto);
 	}
 
+	@PutMapping("/update")
+	public EvaluationDto updateEvaluation(@Valid @RequestBody EvaluationDto evaluationDto) {
+		return evaluationService.updateEvaluation(evaluationDto);
+	}
+
 	@GetMapping("/getFinalEvaluation/{enrollmentId}")
 	public Double getCandidateFinalEvaluation(@PathVariable Long enrollmentId) {
 		return evaluationService.getCandidateFinalEvaluation(enrollmentId);
@@ -33,7 +37,7 @@ public class EvaluationController {
 	}
 
 	@GetMapping("/getWeights/{fellowshipId}")
-	public Map<EvaluationCategory, Double> getEvaluationWeights(@PathVariable Long fellowshipId) {
+	public Map<String, Double> getEvaluationWeights(@PathVariable Long fellowshipId) {
 		return evaluationService.getEvaluationWeights(fellowshipId);
 	}
 

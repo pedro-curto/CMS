@@ -36,6 +36,14 @@
 			enrollmentNotNull();
 			// checks if the scores are between 0 and 20
 			validateScores();
+			// checks if the provided categories correspond to the fellowship categories
+			validateCategories();
+		}
+
+		public void update(EvaluationDto evaluationDto) {
+			this.scores = evaluationDto.getScores();
+			// checks if the scores are between 0 and 20
+			validateScores();
 		}
 
 		public void setEnrollment(Enrollment enrollment) {
@@ -75,7 +83,15 @@
 					throw new CMSException(SCORES_OUT_OF_BOUNDS);
 				}
 			}
+		}
 
+		private void validateCategories() {
+			// gets categories from the fellowship
+			Map<String, Double> weights = enrollment.getFellowship().getWeights();
+			// checks if the categories are the same
+			if (!scores.keySet().equals(weights.keySet())) {
+				throw new CMSException(CATEGORIES_MISMATCH);
+			}
 		}
 
 	}

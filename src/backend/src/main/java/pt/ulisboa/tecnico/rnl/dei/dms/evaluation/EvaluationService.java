@@ -8,7 +8,6 @@ import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.repository.EnrollmentRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.error.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.domain.Evaluation;
-import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.domain.EvaluationCategory;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.dto.EvaluationDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.repository.EvaluationRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain.Fellowship;
@@ -36,6 +35,14 @@ public class EvaluationService {
 			throw new CMSException(EVALUATION_ALREADY_EXISTS);
 		}
 		Evaluation evaluation = new Evaluation(enrollment, evaluationDto);
+		evaluationRepository.save(evaluation);
+		return new EvaluationDto(evaluation);
+	}
+
+	public EvaluationDto updateEvaluation(EvaluationDto evaluationDto) {
+		Evaluation evaluation = evaluationRepository.findById(evaluationDto.getId())
+				.orElseThrow(() -> new CMSException(EVALUATION_NOT_FOUND, evaluationDto.getId()));
+		evaluation.update(evaluationDto);
 		evaluationRepository.save(evaluation);
 		return new EvaluationDto(evaluation);
 	}
