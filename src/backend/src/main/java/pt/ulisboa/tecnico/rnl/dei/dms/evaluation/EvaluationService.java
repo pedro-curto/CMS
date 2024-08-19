@@ -59,7 +59,7 @@ public class EvaluationService {
 	}
 
 	@Transactional
-	public Map<EvaluationCategory, Double> getEvaluationWeights(Long fellowshipId) {
+	public Map<String, Double> getEvaluationWeights(Long fellowshipId) {
 		// weights belong to the fellowship itself, not to the evaluation
 		Fellowship fellowship = fellowshipRepository.findById(fellowshipId)
 				.orElseThrow(() -> new CMSException(FELLOWSHIP_NOT_FOUND, fellowshipId));

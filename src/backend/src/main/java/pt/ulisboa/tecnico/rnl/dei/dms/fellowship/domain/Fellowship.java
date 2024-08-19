@@ -3,12 +3,9 @@ package pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollment.domain.Enrollment;
-import pt.ulisboa.tecnico.rnl.dei.dms.error.CMSException;
-import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.domain.EvaluationCategory;
-import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.repository.EvaluationCategoryRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto.FellowshipDto;
+import pt.ulisboa.tecnico.rnl.dei.dms.error.CMSException;
 import static pt.ulisboa.tecnico.rnl.dei.dms.error.ErrorMessage.*;
 
 import java.math.BigDecimal;
@@ -30,10 +27,12 @@ public class Fellowship {
 	private BigDecimal monthlyValue;
 	private boolean closed = false;
 	private Long winnerId;
+
 	@OneToMany(mappedBy = "fellowship", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Enrollment> enrollments = new ArrayList<>();
+
 	@ElementCollection
-	private Map<EvaluationCategory, Double> weights = new HashMap<>();
+	private Map<String, Double> weights = new HashMap<>();
 
 	public Fellowship(String name, String description, LocalDate startDate, LocalDate endDate, BigDecimal monthlyValue) {
 		this.name = name;
@@ -64,24 +63,41 @@ public class Fellowship {
 		enrollments.remove(enrollment);
 	}
 
-	private Map<EvaluationCategory, Double> initializeDefaultWeights() {
-		// initializes three default categories (Curriculum, Interview, Exercise) and gives them weights
-		Map<EvaluationCategory, Double> defaultWeights = new HashMap<>();
-		EvaluationCategory curriculum = new EvaluationCategory("Curriculum");
-		EvaluationCategory exercise = new EvaluationCategory("Exercise");
-		EvaluationCategory interview = new EvaluationCategory("Interview");
-		defaultWeights.put(curriculum, 0.3);
-		defaultWeights.put(exercise, 0.3);
-		defaultWeights.put(interview, 0.4);
+	private Map<String, Double> initializeDefaultWeights() {
+		Map<String, Double> defaultWeights = new HashMap<>();
+		defaultWeights.put("Curriculum", 0.3);
+		defaultWeights.put("Interview", 0.5);
+		defaultWeights.put("Exercise", 0.2);
 		return defaultWeights;
 	}
 
-	public void updateWeight(EvaluationCategory category, Double weight) {
+	public void addEvaluationCategory(String category, Double weight) {
 		if (weights.containsKey(category)) {
-			weights.put(category, weight);
-		} else {
+			throw new CMSException(CATEGORY_ALREADY_EXISTS, category);
+		}
+		weights.put(category, weight);
+		adjustWeights();
+	}
+
+	public void removeEvaluationCategory(String category) {
+		if (!weights.containsKey(category)) {
 			throw new CMSException(CATEGORY_NOT_FOUND);
 		}
+		weights.remove(category);
+		adjustWeights();
+	}
+
+	private void adjustWeights() {
+		double totalWeight = weights.values().stream().mapToDouble(Double::doubleValue).sum();
+		weights.replaceAll((category, weight) -> weight / totalWeight);
+	}
+
+	public void updateWeight(String category, Double weight) {
+		if (!weights.containsKey(category)) {
+			throw new CMSException(CATEGORY_NOT_FOUND);
+		}
+		weights.put(category, weight);
+		adjustWeights();
 	}
 
 	public void update(FellowshipDto fellowshipDto) {
@@ -90,7 +106,7 @@ public class Fellowship {
 		setStartDate(fellowshipDto.getStartDate());
 		setEndDate(fellowshipDto.getEndDate());
 		setMonthlyValue(fellowshipDto.getMonthlyValue());
-		setWeights(fellowshipDto.getWeights() != null ? fellowshipDto.getWeights() : initializeDefaultWeights());
+		setWeights(fellowshipDto.getWeights());
 		verifyInvariants();
 		validateDates();
 		verifyWeights();
@@ -155,10 +171,7 @@ public class Fellowship {
 	}
 
 	private void verifyWeights() {
-		double sum = 0;
-		for (Map.Entry<EvaluationCategory, Double> entry : weights.entrySet()) {
-			sum += entry.getValue();
-		}
+		double sum = weights.values().stream().mapToDouble(Double::doubleValue).sum();
 		if (sum != 1) {
 			throw new CMSException(WRONG_WEIGHTS_SUM, String.valueOf(sum));
 		}

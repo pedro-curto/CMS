@@ -46,9 +46,11 @@ public class EvaluationCategoryService {
 	}
 
 	@Transactional
-	public List<EvaluationCategoryDto> deleteEvaluationCategory(Long id) {
-		EvaluationCategory evaluationCategory = evaluationCategoryRepository.findById(id)
-				.orElseThrow(() -> new CMSException(EVALUATION_CATEGORY_NOT_FOUND, id));
+	public List<EvaluationCategoryDto> deleteEvaluationCategory(String name) {
+		EvaluationCategory evaluationCategory = evaluationCategoryRepository.findByName(name);
+		if (evaluationCategory == null) {
+			throw new CMSException(EVALUATION_CATEGORY_NOT_FOUND, name);
+		}
 		evaluationCategoryRepository.delete(evaluationCategory);
 		return getEvaluationCategories();
 	}

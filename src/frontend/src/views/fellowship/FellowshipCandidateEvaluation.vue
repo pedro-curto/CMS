@@ -7,41 +7,41 @@
     </v-row>
     <!-- Presents evaluation details if the candidate evaluation was already made -->
     <v-container v-if="evaluation">
-    <v-row >
-      <v-col>
-        <v-card class="pa-6" outlined>
-          <v-card-title class="headline">Evaluation for {{ candidate?.name }}</v-card-title>
-          <v-card-subtitle class="text-h6 mb-4">Scores</v-card-subtitle>
-          <v-divider></v-divider>
-          <v-card-text>
-            <v-row>
-              <v-col v-for="(score, category) in evaluation.scores" :key="category" cols="12" sm="6" md="4">
-                <v-card class="pa-4" outlined>
-                  <div class="text-h6">{{ category }}</div>
-                  <div class="text-body-1">{{ formatNumber(score) }}</div>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+      <v-row>
+        <v-col>
+          <v-card class="pa-6" outlined>
+            <v-card-title class="headline">Evaluation for {{ candidate?.name }}</v-card-title>
+            <v-card-subtitle class="text-h6 mb-4">Scores</v-card-subtitle>
+            <v-divider></v-divider>
+            <v-card-text>
+              <v-row>
+                <v-col v-for="(score, category) in evaluation.scores" :key="category" cols="12" sm="6" md="4">
+                  <v-card class="pa-4" outlined>
+                    <div class="text-h6">{{ category }}</div>
+                    <div class="text-body-1">{{ formatNumber(score) }}</div>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
 
-    <v-row v-if="evaluation" justify="center">
-      <v-col cols="12" md="6">
-        <v-card class="elevation-2" outlined>
-          <v-card-title class="headline text-center">
-            <v-icon>mdi-trophy</v-icon>
-            <span class="ml-2">Evaluation Result</span>
-          </v-card-title>
-          <v-card-text class="text-center">
-            <div class="final-result">
-              {{ formatNumber(finalResult) }}
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+      <v-row v-if="evaluation" justify="center">
+        <v-col cols="12" md="6">
+          <v-card class="elevation-2" outlined>
+            <v-card-title class="headline text-center">
+              <v-icon>mdi-trophy</v-icon>
+              <span class="ml-2">Evaluation Result</span>
+            </v-card-title>
+            <v-card-text class="text-center">
+              <div class="final-result">
+                {{ formatNumber(finalResult) }}
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-container>
     <!-- If the candidate evaluation was not made yet, presents the form to create one -->
     <v-row v-else>
@@ -53,7 +53,7 @@
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
               <v-row>
-                <v-col v-for="category in evaluationCategories" :key="category" cols="12" sm="6" md="4">
+                <v-col v-for="(weight, category) in evaluationWeights" :key="category" cols="12" sm="6" md="4">
                   <v-text-field
                       v-model="newEvaluation.scores[category]"
                       :label="`${category} Score`"
@@ -97,7 +97,7 @@ const enrollmentId = ref<number | null>(null)
 const evaluation = ref<EvaluationDto | null>(null)
 const candidate = ref<CandidateDto | null>(null)
 const finalResult = ref<number | null>(null)
-const evaluationCategories = ref<string[]>([])
+const evaluationWeights = ref<{ [key: string]: number }>({})
 const newEvaluation = ref<EvaluationDto>({
   enrollmentId: null,
   scores: {}
@@ -115,10 +115,11 @@ onMounted(async () => {
     candidate.value = await RemoteService.getCandidateById(candidateId)
     try {
       evaluation.value = await RemoteService.getEvaluationDetails(enrollmentId.value)
+      console.log("EVALUATION: " + JSON.stringify(evaluation.value))
       finalResult.value = await RemoteService.getCandidateFinalEvaluation(enrollmentId.value)
     } catch (err) {
       newEvaluation.value.enrollmentId = enrollmentId.value
-      evaluationCategories.value = await RemoteService.getEvaluationCategories()
+      evaluationWeights.value = await RemoteService.getEvaluationWeights(fellowshipId)
     }
   } catch (err) {
     console.error('Failed to fetch evaluation details:', err)
@@ -127,6 +128,7 @@ onMounted(async () => {
 
 async function submitEvaluation() {
   try {
+    console.log("NEW EVALUATION: " + JSON.stringify(newEvaluation.value))
     await RemoteService.createEvaluation(newEvaluation.value)
     evaluation.value = await RemoteService.getEvaluationDetails(enrollmentId.value)
     finalResult.value = await RemoteService.getCandidateFinalEvaluation(enrollmentId.value)

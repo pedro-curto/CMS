@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pt.ulisboa.tecnico.rnl.dei.dms.error.CMSException;
-import pt.ulisboa.tecnico.rnl.dei.dms.error.ErrorMessage;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.dto.EvaluationCategoryDto;
 import static pt.ulisboa.tecnico.rnl.dei.dms.error.ErrorMessage.NAME_REQUIRED;
 
@@ -20,9 +19,8 @@ public class EvaluationCategory {
 	@Column(nullable = false, unique = true)
 	private String name;
 
-	public EvaluationCategory(EvaluationCategoryDto evaluationCategory) {
-		this.id = evaluationCategory.getId();
-		this.name = evaluationCategory.getName();
+	public EvaluationCategory(EvaluationCategoryDto evaluationCategoryDto) {
+		this.name = evaluationCategoryDto.getName();
 		verifyInvariants();
 	}
 

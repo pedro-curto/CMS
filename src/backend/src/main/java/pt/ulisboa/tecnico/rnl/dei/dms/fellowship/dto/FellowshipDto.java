@@ -3,7 +3,6 @@ package pt.ulisboa.tecnico.rnl.dei.dms.fellowship.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pt.ulisboa.tecnico.rnl.dei.dms.evaluation.domain.EvaluationCategory;
 import pt.ulisboa.tecnico.rnl.dei.dms.fellowship.domain.Fellowship;
 
 import java.math.BigDecimal;
@@ -22,8 +21,7 @@ public class FellowshipDto {
 	private BigDecimal monthlyValue;
 	private boolean closed;
 	private Long winnerId;
-
-	private Map<EvaluationCategory, Double> weights;
+	private Map<String, Double> weights;
 
 	public FellowshipDto(Fellowship fellowship) {
 		this.id = fellowship.getId();

@@ -5,6 +5,7 @@ import CandidateDto from '@/models/candidate/CandidateDto';
 import FellowshipDto from '@/models/fellowship/FellowshipDto';
 import EnrollmentDto from "@/models/enrollment/EnrollmentDto";
 import EvaluationDto from '@/models/evaluation/EvaluationDto';
+import EvaluationCategoryDto from '@/models/evaluation/EvaluationCategoryDto';
 
 const httpClient = axios.create()
 httpClient.defaults.timeout = 10000
@@ -173,13 +174,7 @@ export default class RemoteService {
     })
   }
 
-  static async getEvaluationCategories(): Promise<string[]> {
-    return httpClient.get('/evaluations/getCategories').then((response) => {
-      return response.data
-    })
-  }
-
-  static async getEvaluationWeights(fellowshipId: number): Promise<number[]> {
+  static async getEvaluationWeights(fellowshipId: number): Promise<{ [key: EvaluationCategoryDto]: number }> {
     return httpClient.get(`/evaluations/getWeights/${fellowshipId}`).then((response) => {
       return response.data
     })

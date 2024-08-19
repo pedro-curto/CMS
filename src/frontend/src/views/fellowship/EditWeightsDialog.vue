@@ -8,17 +8,24 @@
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-text-field
-              v-for="(weight, category) in weights"
+              v-for="(weight, category) in tempWeights"
               :key="category"
               :label="category"
-              v-model.number="weights[category]"
+              v-model.number="tempWeights[category]"
               :rules="weightRules"
               type="number"
               step="0.1"
               min="0"
               max="1"
+              :append-icon="'mdi-trash-can'"
+              @click:append="removeCategory(category)"
               required
           ></v-text-field>
+          <v-text-field
+              v-model="newCategory"
+              label="New Category"
+          ></v-text-field>
+          <v-btn @click="addCategory">Add Category</v-btn>
         </v-form>
       </v-card-text>
 
@@ -38,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, watch, onMounted, computed} from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
 import RemoteService from '@/services/RemoteService';
 
 const props = defineProps<{ fellowshipId: number }>();
@@ -48,27 +55,40 @@ const dialogVisible = ref(true);
 const valid = ref(false);
 const form = ref(null);
 const weights = ref<{ [key: string]: number }>({});
+const tempWeights = ref<{ [key: string]: number }>({});
+const newCategory = ref('');
 
 const weightRules = [
   (v: number) => !!v || 'Weight is required',
   (v: number) => v >= 0 && v <= 1 || 'Weight must be between 0 and 1'
-    // total sum of weights must be 1
 ];
 
 const fetchWeights = async () => {
   try {
-    const response = await RemoteService.getEvaluationWeights(props.fellowshipId);
-    weights.value = response;
+    weights.value = await RemoteService.getEvaluationWeights(props.fellowshipId);
+    tempWeights.value = { ...weights.value };
   } catch (error) {
     console.error('Failed to fetch weights', error);
   }
 };
 
+const addCategory = () => {
+  if (newCategory.value && !tempWeights.value[newCategory.value]) {
+    tempWeights.value[newCategory.value] = 0;
+    newCategory.value = '';
+  }
+};
+
+const removeCategory = (category: string) => {
+  delete tempWeights.value[category];
+};
+
 const updateWeights = async () => {
   try {
-    await RemoteService.updateFellowshipWeights(props.fellowshipId, weights.value);
+    console.log("tempWeights.value", tempWeights.value);
+    await RemoteService.updateFellowshipWeights(props.fellowshipId, tempWeights.value);
     alert('Weights updated successfully');
-    emit('weights-updated', weights.value);
+    emit('weights-updated', tempWeights.value);
     closeDialog();
   } catch (error) {
     console.error('Failed to update weights', error);
@@ -77,7 +97,7 @@ const updateWeights = async () => {
 
 const submitForm = () => {
   const diff = 0.01;
-  if (valid.value && Math.abs(totalWeight.value -1) <= diff) {
+  if (valid.value && Math.abs(totalWeight.value - 1) <= diff) {
     updateWeights();
   } else {
     alert('Total sum of weights must be 1.');
@@ -85,7 +105,7 @@ const submitForm = () => {
 };
 
 const totalWeight = computed(() => {
-  return Object.values(weights.value).reduce((sum, weight) => sum + weight, 0);
+  return Object.values(tempWeights.value).reduce((sum, weight) => sum + weight, 0);
 });
 
 const closeDialog = () => {

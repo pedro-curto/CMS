@@ -28,7 +28,7 @@
 		private Enrollment enrollment;
 		@ElementCollection
 		// its value must be between 0 and 20
-		private Map<EvaluationCategory, Double> scores = new HashMap<>();
+		private Map<String, Double> scores = new HashMap<>();
 
 		public Evaluation(Enrollment enrollment, EvaluationDto evaluationDto) {
 			setEnrollment(enrollment);
@@ -45,9 +45,10 @@
 
 		public Double calculateFinalScore() {
 			// gets weights from the fellowship
-			Map<EvaluationCategory, Double> weights = enrollment.getFellowship().getWeights();
+			Map<String, Double> weights = enrollment.getFellowship().getWeights();
 			double finalScore = 0;
-			for (EvaluationCategory category : scores.keySet()) {
+			// calculates the final score
+			for (String category : scores.keySet()) {
 				finalScore += scores.get(category) * weights.get(category);
 			}
 			return finalScore;
@@ -69,7 +70,7 @@
 				throw new CMSException(SCORES_CANT_BE_EMPTY);
 			}
 			// scores must be between 0 and 20
-			for (EvaluationCategory category : scores.keySet()) {
+			for (String category : scores.keySet()) {
 				if (scores.get(category) < 0 || scores.get(category) > 20) {
 					throw new CMSException(SCORES_OUT_OF_BOUNDS);
 				}

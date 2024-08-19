@@ -13,7 +13,8 @@ public enum ErrorMessage {
     NO_ENROLLMENTS_FOUND("No enrollments found"),
     NO_WINNER_FOUND("No winner found"),
     EVALUATION_CATEGORY_ALREADY_EXISTS("Evaluation category already exists: %s"),
-    EVALUATION_CATEGORY_NOT_FOUND("Evaluation category with id %s not found"),
+    EVALUATION_CATEGORY_NOT_FOUND("Evaluation category %s not found"),
+    CATEGORY_ALREADY_EXISTS("Category already exists: %s"),
 
    // Fellowship
    FELLOWSHIP_NAME_REQUIRED("Fellowship name is mandatory"),
